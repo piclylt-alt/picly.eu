@@ -16,6 +16,41 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
+<script>
+  async function handleForm(formId, statusId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    const statusEl = document.getElementById(statusId);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = new FormData(form).get('email');
+      if (!email) { statusEl.textContent = 'Įvesk el. paštą'; return; }
+
+      statusEl.textContent = 'Siunčiame...';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok) {
+          statusEl.textContent = data.message || 'Patikrink paštą!';
+          form.reset();
+        } else {
+          statusEl.textContent = data.error || 'Įvyko klaida. Bandyk dar kartą.';
+        }
+      } catch {
+        statusEl.textContent = 'Tinklo klaida. Bandyk dar kartą.';
+      }
+    });
+  }
+
+  handleForm('earlyAccessForm', 'status-early');
+  handleForm('betaForm', 'status-beta');
+</script>
 <body>
   <header class="header">
     <div class="container nav">

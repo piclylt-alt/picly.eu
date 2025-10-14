@@ -1,26 +1,6 @@
 // /functions/api/subscribe.js
-<<<<<<< Updated upstream
-const cors = {
-  "Access-Control-Allow-Origin": "*",        // arba tavo domeną
-  "Access-Control-Allow-Methods": "POST,OPTIONS,GET",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-}
 
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: cors })
-}
-
-export async function onRequestGet() {
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: { "Content-Type": "application/json", ...cors },
-  })
-}
-
-export async function onRequestPost(context) {
-=======
-
-// Small helpers
+// Utilities
 function json(obj, status = 200, extra = {}) {
   return new Response(JSON.stringify(obj), {
     status,
@@ -50,10 +30,9 @@ export async function onRequestGet() {
   return new Response('OK', { status: 200 });
 }
 
-// Optional preflight (OPTIONS /api/subscribe)
+// Preflight (OPTIONS /api/subscribe)
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: {
-    // if same-origin, this isn't needed; harmless to keep
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
@@ -62,103 +41,10 @@ export async function onRequestOptions() {
 
 // POST /api/subscribe
 export async function onRequestPost({ request, env }) {
->>>>>>> Stashed changes
   try {
-    const { request, env } = context
-    const body = await request.json()
-    const { email, source } = body || {}
-    const trimmedEmail = typeof email === "string" ? email.trim() : ""
+    const body = await readBodySmart(request);
+    const email = String(body?.email || '').trim().toLowerCase();
 
-<<<<<<< Updated upstream
-    if (!trimmedEmail) {
-      return new Response(JSON.stringify({ error: "Missing email" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json", ...cors },
-      })
-    }
-
-    const emailRegex = /.+@.+\..+/
-    if (!emailRegex.test(trimmedEmail)) {
-      return new Response(JSON.stringify({ error: "Invalid email" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json", ...cors },
-      })
-    }
-
-    const fromEmail = env.FROM_EMAIL?.trim()
-    const ownerEmail = env.OWNER_EMAIL?.trim()
-
-    if (!fromEmail || !ownerEmail || !env.RESEND_API_KEY) {
-      return new Response(
-        JSON.stringify({ error: "Server misconfigured" }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json", ...cors },
-        },
-      )
-    }
-
-    // Siunčiam per Resend REST (be Node SDK)
-    const resendFetch = (payload) =>
-      fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-
-    const subscriberPayload = {
-      from: fromEmail,
-      to: trimmedEmail,
-      reply_to: ownerEmail,
-      subject: "Picly: registracija gauta",
-      html: `<p>Ačiū! Patvirtinsime kuo greičiau.</p>`,
-      text: "Ačiū! Patvirtinsime kuo greičiau.",
-    }
-
-    const ownerPayload = {
-      from: fromEmail,
-      to: ownerEmail,
-      subject: "Naujas Picly užsiregistravęs lankytojas",
-      html: `<p>Naujas lankytojas nori prisijungti.</p><p><strong>El. paštas:</strong> ${trimmedEmail}</p><p><strong>Forma:</strong> ${source || "unknown"}</p>`,
-      text: `Naujas lankytojas: ${trimmedEmail}\nForma: ${source || "unknown"}`,
-      reply_to: trimmedEmail,
-    }
-
-    const [subscriberRes, ownerRes] = await Promise.all([
-      resendFetch(subscriberPayload),
-      resendFetch(ownerPayload),
-    ])
-
-    if (!subscriberRes.ok || !ownerRes.ok) {
-      const [subscriberText, ownerText] = await Promise.all([
-        subscriberRes.text(),
-        ownerRes.text(),
-      ])
-      return new Response(
-        JSON.stringify({
-          error: "Resend failed",
-          details: { subscriber: subscriberText, owner: ownerText },
-        }),
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json", ...cors },
-        },
-      )
-    }
-
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json", ...cors },
-    })
-  } catch (err) {
-    return new Response(JSON.stringify({ error: "Server error", details: String(err) }), {
-      status: 500,
-      headers: { "Content-Type": "application/json", ...cors },
-    })
-=======
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return json({ error: 'Neteisingas el. pašto formatas' }, 400);
     }
@@ -166,16 +52,14 @@ export async function onRequestPost({ request, env }) {
       return json({ error: 'Serverio konfigūracija: trūksta RESEND_API_KEY' }, 500);
     }
 
-    // Use a verified sender on your Resend-verified domain:
-    // e.g., "Picly <noreply@picly.eu>"
+    // Use your Resend-verified sender, e.g. "Picly <noreply@picly.eu>"
     const from = (env.FROM_EMAIL && env.FROM_EMAIL.includes('@'))
       ? env.FROM_EMAIL
-      : 'Picly <onboarding@resend.dev>'; // fallback for testing; prefer your domain
+      : 'Picly <onboarding@resend.dev>'; // fallback for quick tests (prefer your domain)
 
-    // Where you (the owner) want to receive signup pings
     const ownerEmail = env.OWNER_EMAIL || 'hello@picly.eu';
 
-    // 1) Notify the owner
+    // 1) Notify owner
     const ownerPayload = {
       from,
       to: [ownerEmail],
@@ -198,13 +82,12 @@ export async function onRequestPost({ request, env }) {
       },
       body: JSON.stringify(ownerPayload),
     });
-
     const r1body = await r1.json().catch(() => ({}));
     if (!r1.ok) {
       return json({ error: 'Owner email klaida', details: r1body?.message || r1body }, 502);
     }
 
-    // 2) Confirm to the subscriber
+    // 2) Confirm to subscriber
     const userPayload = {
       from,
       to: [email],
@@ -229,18 +112,15 @@ export async function onRequestPost({ request, env }) {
       },
       body: JSON.stringify(userPayload),
     });
-
     const r2body = await r2.json().catch(() => ({}));
     if (!r2.ok) {
       return json({ error: 'Subscriber email klaida', details: r2body?.message || r2body }, 502);
     }
 
     return json({ message: 'Išsiųsta. Patikrink paštą!' }, 200, {
-      // same-origin calls do not need CORS; keeping permissive CORS for flexibility
       'Access-Control-Allow-Origin': '*',
     });
   } catch (e) {
     return json({ error: 'Serverio klaida', details: String(e).slice(0, 600) }, 500);
->>>>>>> Stashed changes
   }
 }

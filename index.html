@@ -245,5 +245,43 @@
   </footer>
 
   <script src="/script.js"></script>
+  <form id="subscribe-form" style="margin:16px 0">
+  <input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email">
+  <button id="subscribe-btn" type="submit">Get early access</button>
+</form>
+
+<!-- ✅ this line was missing -->
+<p id="msg" style="margin-top:8px; font-weight:500; color:white;"></p>
+
+<script>
+document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('email').value.trim();
+  const msgEl = document.getElementById('msg');
+  msgEl.textContent = 'Siunčiama…';
+
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok) {
+      msgEl.textContent = data.message || 'Išsiųsta. Patikrink paštą!';
+    } else {
+      msgEl.textContent = data.error ? `Klaida: ${data.error}` : `Klaida (${res.status})`;
+      console.log('Server details:', data);
+    }
+  } catch (err) {
+    msgEl.textContent = 'Tinklo klaida — bandyk dar kartą.';
+    console.error(err);
+  }
+});
+</script>
 </body>
+
 </html>

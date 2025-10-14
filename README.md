@@ -7,6 +7,7 @@ Landing + Cloudflare Pages Functions (email capture via Resend) + demo dropzone.
    - `RESEND_API_KEY` — tavo Resend API raktas
    - `OWNER_EMAIL` — kur gauti pranešimus (pvz., hello@picly.eu)
    - `FROM_EMAIL` — siuntėjo adresas (pvz., Picly <noreply@picly.eu>)
+   - *Svarbu:* `FROM_EMAIL` turi naudoti Resend’e patvirtintą domeną/adresą, kitaip laiškai nebus išsiųsti.
 
 3) Deploy. Formos (`#earlyAccessForm`, `#betaForm`) POST'ina į `/api/subscribe`.
 

@@ -20,36 +20,86 @@ export async function onRequestPost(context) {
   try {
     const { request, env } = context
     const body = await request.json()
-    const { email } = body || {}
+    const { email, source } = body || {}
+    const trimmedEmail = typeof email === "string" ? email.trim() : ""
 
-    if (!email) {
+    if (!trimmedEmail) {
       return new Response(JSON.stringify({ error: "Missing email" }), {
         status: 400,
         headers: { "Content-Type": "application/json", ...cors },
       })
     }
 
-    // Siunčiam per Resend REST (be Node SDK)
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${env.RESEND_API_KEY}`, // SVARBU: context.env
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Picly <noreply@picly.eu>",   // domenas turi būti verified Resend’e
-        to: [email],
-        subject: "Picly: registracija gauta",
-        html: `<p>Ačiū! Patvirtinsime kuo greičiau.</p>`,
-      }),
-    })
-
-    if (!res.ok) {
-      const text = await res.text()
-      return new Response(JSON.stringify({ error: "Resend failed", details: text }), {
-        status: 500,
+    const emailRegex = /.+@.+\..+/
+    if (!emailRegex.test(trimmedEmail)) {
+      return new Response(JSON.stringify({ error: "Invalid email" }), {
+        status: 400,
         headers: { "Content-Type": "application/json", ...cors },
       })
+    }
+
+    const fromEmail = env.FROM_EMAIL?.trim()
+    const ownerEmail = env.OWNER_EMAIL?.trim()
+
+    if (!fromEmail || !ownerEmail || !env.RESEND_API_KEY) {
+      return new Response(
+        JSON.stringify({ error: "Server misconfigured" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...cors },
+        },
+      )
+    }
+
+    // Siunčiam per Resend REST (be Node SDK)
+    const resendFetch = (payload) =>
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+    const subscriberPayload = {
+      from: fromEmail,
+      to: trimmedEmail,
+      reply_to: ownerEmail,
+      subject: "Picly: registracija gauta",
+      html: `<p>Ačiū! Patvirtinsime kuo greičiau.</p>`,
+      text: "Ačiū! Patvirtinsime kuo greičiau.",
+    }
+
+    const ownerPayload = {
+      from: fromEmail,
+      to: ownerEmail,
+      subject: "Naujas Picly užsiregistravęs lankytojas",
+      html: `<p>Naujas lankytojas nori prisijungti.</p><p><strong>El. paštas:</strong> ${trimmedEmail}</p><p><strong>Forma:</strong> ${source || "unknown"}</p>`,
+      text: `Naujas lankytojas: ${trimmedEmail}\nForma: ${source || "unknown"}`,
+      reply_to: trimmedEmail,
+    }
+
+    const [subscriberRes, ownerRes] = await Promise.all([
+      resendFetch(subscriberPayload),
+      resendFetch(ownerPayload),
+    ])
+
+    if (!subscriberRes.ok || !ownerRes.ok) {
+      const [subscriberText, ownerText] = await Promise.all([
+        subscriberRes.text(),
+        ownerRes.text(),
+      ])
+      return new Response(
+        JSON.stringify({
+          error: "Resend failed",
+          details: { subscriber: subscriberText, owner: ownerText },
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...cors },
+        },
+      )
     }
 
     return new Response(JSON.stringify({ ok: true }), {

@@ -49,38 +49,66 @@ img{max-width:100%;display:block}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .feature h3{margin:4px 0 6px}
 
+/* --- Uploader (vienas kvadratas centre) --- */
 .demo { text-align:center; }
-.dropzone{
-  display:grid;                /* easy centering */
+
+.uploader{
+  /* centras */
+  display:grid;
   place-items:center;
+
+  /* square */
   width:100%;
-  max-width:420px;             /* square size on desktop */
-  aspect-ratio:1 / 1;          /* keep it a square */
-  margin:16px auto 0;          /* center */
-  padding:0;                   /* square = no inner padding */
-  position:relative;
-  border:2px dashed rgba(255,255,255,.18);
+  max-width:460px;      /* desktop dydis */
+  aspect-ratio:1 / 1;   /* visada kvadratas */
+
+  margin:16px auto 0;   /* centras */
+  border:2px dashed rgba(255,255,255,.16);
   border-radius:16px;
   background:rgba(255,255,255,.03);
+  position:relative;
+  overflow:hidden;
   cursor:pointer;
-  transition:background .2s, border-color .2s, transform .06s;
+
+  /* interaction */
+  transition:border-color .2s, background .2s, transform .06s;
 }
-.dropzone::before{
+.uploader:hover{
+  border-color:var(--primary-2);
+  background:rgba(255,255,255,.05);
+}
+.uploader:active{ transform:translateY(1px); }
+
+/* Didelis “+” per pseudo elementą, kad nesimaišytų su tekstu */
+.uploader::before{
   content:"+";
-  font-size:72px;
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-58%);
+  font-size:80px;
   line-height:1;
   opacity:.9;
+  pointer-events:none;
 }
 
-.dropzone:hover{ background:rgba(255,255,255,.05); border-color:var(--primary-2); }
-.dz-inner{
-  position:absolute;           /* keep helper text inside square */
-  bottom:14px;                 /* sit near the bottom */
-  left:50%;
+/* Vidinis turinys (antraštė + hint’ai apačioj) */
+.uploader__center{
+  position:absolute;
+  left:50%; bottom:14px;
   transform:translateX(-50%);
   width:88%;
-  opacity:.9;
-  pointer-events:none;         /* clicking text still opens picker */
+  text-align:center;
+  pointer-events:none;  /* kad paspaudimai vis tiek suveiktų ant viso label */
+}
+.uploader__title{ font-weight:700; margin:0 0 4px; opacity:.95; }
+.uploader__hint{ font-size:14px; opacity:.9; }
+.uploader__types{ font-size:13px; }
+
+/* Drag-over būsena (naudojam klasę iš JS) */
+.uploader.is-dragover{
+  border-color:var(--primary-2);
+  background:rgba(37,99,235,.08);
+  box-shadow:0 0 0 6px var(--ring);
 }
 
 .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:18px;justify-items: center;}
@@ -110,7 +138,7 @@ summary{cursor:pointer;font-weight:600}
 .footer a:hover{opacity:1}
 .demo .btn{ min-width:140px; }
 .form-msg{ min-height:20px; margin-top:8px; color:var(--muted); }
-.dropzone.is-dragover{border-color:var(--primary-2); background:rgba(37,99,235,.08);}
+
 
 /* Responsive */
 @media (max-width: 900px){

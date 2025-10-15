@@ -128,12 +128,14 @@
         <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
         <!-- Dropzona + failų pasirinkimas -->
-        <label class="card dropzone" id="dropzone">
-          <div class="dz-inner">
-            <p><strong>Tempk & MesK</strong> nuotraukas čia arba spausk pasirinkti.</p>
-            <p class="muted">Leidžiami tipai: JPG, PNG, WEBP. Max 10MB / failas.</p>
-          </div>
+        <label class="uploader" id="dropzone">
           <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+          <div class="uploader__center">
+            <!-- “+” ikona per CSS ::before, bet čia paliekam vietą turiniui -->
+            <div class="uploader__title">Įkelk nuotraukas</div>
+            <div class="uploader__hint">Tempk ir mesk arba spausk — atsidarys failų langas</div>
+            <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
+          </div>
         </label>
 
         <!-- Peržiūros grid -->
@@ -349,10 +351,12 @@ document.getElementById('subscribe-form').addEventListener('submit', async (e) =
 
   // Drag & drop
   ;['dragenter','dragover'].forEach(ev => dropzone.addEventListener(ev, e => {
-    e.preventDefault(); e.stopPropagation(); dropzone.style.outline='2px solid var(--primary-2)';
+    e.preventDefault(); e.stopPropagation();
+    dropzone.classList.add('is-dragover');
   }));
   ;['dragleave','drop'].forEach(ev => dropzone.addEventListener(ev, e => {
-    e.preventDefault(); e.stopPropagation(); dropzone.style.outline='1px dashed var(--border)';
+    e.preventDefault(); e.stopPropagation();
+    dropzone.classList.remove('is-dragover');
   }));
   dropzone.addEventListener('click', () => fileInput.click());
   dropzone.addEventListener('drop', e => acceptFiles(e.dataTransfer.files));

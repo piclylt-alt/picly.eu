@@ -124,31 +124,32 @@
     </section>
 
     <section class="demo" id="demo">
-      <div class="container">
+      <div class="upload-area">
         <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
         <!-- Dropzona + failų pasirinkimas -->
-        <label class="uploader" id="dropzone">
-          <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
-          <div class="uploader__center">
-            <!-- “+” ikona per CSS ::before, bet čia paliekam vietą turiniui -->
-            <div class="uploader__title">Įkelk nuotraukas</div>
-            <div class="uploader__hint">Tempk ir mesk arba spausk — atsidarys failų langas</div>
-            <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
-          </div>
-        </label>
+          <label class="uploader" id="dropzone">
+            <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+            <div class="uploader__center">
+              <div class="uploader__title">Įkelk nuotraukas</div>
+              <div class="uploader__hint">Tempk ir mesk arba spausk</div>
+              <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
+            </div>
+          </label>
 
         <!-- Peržiūros grid -->
-        <div class="preview-grid" id="previewGrid"></div>
+        <div class="upload-side">
+            <div class="upload-buttons">
+              <button class="btn" id="btnChoose">Pasirinkti failus</button>
+              <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
+              <small class="muted form-msg" id="uploadMsg"></small>
+            </div>
 
-        <!-- Veiksmai -->
-        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn" id="btnChoose">Pasirinkti failus</button>
-          <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
-          <small class="muted form-msg" id="uploadMsg"></small>
+            <div class="preview-grid" id="previewGrid"></div>
+          </div>
         </div>
 
-        <!-- Rezultatas: nuoroda ir failų sąrašas -->
+        <!-- Rezultatas (paliekam po plotu per visą eilutę) -->
         <div class="share" id="shareBox" style="display:none;">
           <p><strong>Nuoroda sukurta!</strong></p>
           <div class="share-row">

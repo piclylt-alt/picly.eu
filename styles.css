@@ -49,20 +49,19 @@ img{max-width:100%;display:block}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .feature h3{margin:4px 0 6px}
 
-/* --- Uploader (vienas kvadratas centre) --- */
+/* --- Uploader (vienas kvadratas) – bazinis stilius --- */
 .demo { text-align:center; }
 
 .uploader{
-  /* centras */
   display:grid;
   place-items:center;
 
   /* square */
   width:100%;
-  max-width:460px;      /* desktop dydis */
-  aspect-ratio:1 / 1;   /* visada kvadratas */
+  max-width:460px;      /* bazinis dydis (bus perrašytas upload-area) */
+  aspect-ratio:1 / 1;
 
-  margin:16px auto 0;   /* centras */
+  margin:16px auto 0;
   border:2px dashed rgba(255,255,255,.16);
   border-radius:16px;
   background:rgba(255,255,255,.03);
@@ -70,7 +69,6 @@ img{max-width:100%;display:block}
   overflow:hidden;
   cursor:pointer;
 
-  /* interaction */
   transition:border-color .2s, background .2s, transform .06s;
 }
 .uploader:hover{
@@ -79,7 +77,7 @@ img{max-width:100%;display:block}
 }
 .uploader:active{ transform:translateY(1px); }
 
-/* Didelis “+” per pseudo elementą, kad nesimaišytų su tekstu */
+/* “+” */
 .uploader::before{
   content:"+";
   position:absolute;
@@ -91,34 +89,70 @@ img{max-width:100%;display:block}
   pointer-events:none;
 }
 
-/* Vidinis turinys (antraštė + hint’ai apačioj) */
+/* Vidinis turinys */
 .uploader__center{
   position:absolute;
   left:50%; bottom:14px;
   transform:translateX(-50%);
   width:88%;
   text-align:center;
-  pointer-events:none;  /* kad paspaudimai vis tiek suveiktų ant viso label */
+  pointer-events:none;
 }
 .uploader__title{ font-weight:700; margin:0 0 4px; opacity:.95; }
 .uploader__hint{ font-size:14px; opacity:.9; }
 .uploader__types{ font-size:13px; }
 
-/* Drag-over būsena (naudojam klasę iš JS) */
+/* Drag-over */
 .uploader.is-dragover{
   border-color:var(--primary-2);
   background:rgba(37,99,235,.08);
   box-shadow:0 0 0 6px var(--ring);
 }
 
+/* --- NAUJA: Upload area layout (kairė kvadratas, dešinė turinys) --- */
+.upload-area{
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:32px;
+  max-width:1000px;
+  margin:12px auto 0;
+}
+
+/* tik upload-area viduje padarom mažesnį kvadratą kairei */
+.upload-area .uploader{
+  max-width:300px;
+  margin:0;              /* jokių auto centravimų – sėda prie kairės */
+}
+
+/* dešinė pusė: mygtukai + preview */
+.upload-side{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+/* mygtukai viršuje dešinėje */
+.upload-buttons{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+/* Preview grid – palieku tavo esamą, tik jis dabar dešinėje */
 .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:18px;justify-items: center;}
 .preview-grid .thumb{ width:100%; max-width:180px; background:#0D0E10; border:1px solid var(--border); border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:8px; transition:transform .12s ease;}
 .preview-grid .thumb:hover{ transform:scale(1.02); }
 .preview-grid img{border-radius:8px;aspect-ratio:1/1;object-fit:cover;width:100%}
+
+/* Share blokas – kaip ir buvo */
 .share{margin-top:16px}
 .share-row{display:flex;gap:8px}
 .share-row input{flex:1;background:#0D0E10;border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
 
+/* kitos sekcijos – be pokyčių */
 .cta-alt{padding:40px 0;border-bottom:1px solid var(--border)}
 .cta-alt__wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
 
@@ -139,7 +173,6 @@ summary{cursor:pointer;font-weight:600}
 .demo .btn{ min-width:140px; }
 .form-msg{ min-height:20px; margin-top:8px; color:var(--muted); }
 
-
 /* Responsive */
 @media (max-width: 900px){
   .hero__grid{grid-template-columns:1fr}
@@ -148,4 +181,9 @@ summary{cursor:pointer;font-weight:600}
   .nav-links{display:none;position:absolute;top:64px;right:16px;background:var(--card);border:1px solid var(--border);padding:10px;border-radius:12px}
   .nav-links.show{display:flex;flex-direction:column;gap:10px}
   .nav-toggle{display:inline-block}
+
+  /* upload area – stulpeliais per vidurį */
+  .upload-area{flex-direction:column;align-items:center}
+  .upload-side{width:100%}
+  .upload-area .uploader{max-width:280px}
 }

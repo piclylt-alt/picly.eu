@@ -175,41 +175,41 @@
     </section>
 
     <section class="demo" id="demo">
-      <div class="container" id="uploader">
-        <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
+    <div class="container" id="uploader">
+      <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
-        <!-- Vienas box'as su + -->
-        <label class="pick-box" id="pickBox" for="fileInputDemo" aria-label="Pasirinkti failus">
-          <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <div class="hint">
-            <strong>Pridėti nuotraukas</strong>
-            <span class="muted">JPG, PNG, WEBP • iki 10MB • max 5 failai</span>
-          </div>
-          <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
-        </label>
-
-        <!-- Peržiūros -->
-        <div class="preview-grid" id="previewGrid" style="display:none;"></div>
-
-        <!-- Veiksmai -->
-        <div class="actions">
-          <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
-          <small class="form-msg" id="uploadMsg"></small>
+      <!-- Vienas box'as su + -->
+      <label class="pick-box" id="pickBox" for="fileInputDemo" aria-label="Pasirinkti failus">
+        <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="hint">
+          <strong>Pridėti nuotraukas</strong>
+          <span class="muted">JPG, PNG, WEBP • iki 10MB • max 5 failai</span>
         </div>
+        <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+      </label>
 
-        <!-- Rezultatas -->
-        <div class="share" id="shareBox" style="display:none;">
-          <p><strong>Nuoroda sukurta!</strong></p>
-          <div class="share-row">
-            <input id="shareUrl" type="text" readonly>
-            <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
-          </div>
-          <ul id="shareFiles" style="margin-top:10px;"></ul>
-        </div>
+      <!-- Peržiūros -->
+      <div class="preview-grid" id="previewGrid" style="display:none;"></div>
+
+      <!-- Veiksmai -->
+      <div class="actions">
+        <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
+        <small class="form-msg" id="uploadMsg"></small>
       </div>
-    </section>
+
+      <!-- Rezultatas -->
+      <div class="share" id="shareBox" style="display:none;">
+        <p><strong>Nuoroda sukurta!</strong></p>
+        <div class="share-row">
+          <input id="shareUrl" type="text" readonly>
+          <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
+        </div>
+        <ul id="shareFiles" style="margin-top:10px;"></ul>
+      </div>
+    </div>
+  </section>
 
 
     <section class="faq" id="faq">

@@ -91,3 +91,61 @@ summary{cursor:pointer;font-weight:600}
   .nav-links.show{display:flex;flex-direction:column;gap:10px}
   .nav-toggle{display:inline-block}
 }
+/* === Upload demo (namespaced) === */
+#uploader{ max-width:780px; margin:0 auto; text-align:center; }
+#uploader h2{ margin-bottom:18px; }
+
+/* didelis + box'as */
+#uploader .pick-box{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px;
+  width:100%; max-width:520px; height:220px;
+  margin:0 auto;
+  border:2px dashed rgba(255,255,255,.18);
+  border-radius:16px;
+  background: rgba(255,255,255,.03);
+  color:#fff;
+  cursor:pointer;
+  transition:border-color .2s, background .2s, transform .06s;
+}
+#uploader .pick-box:hover{ border-color:var(--primary-2); background:rgba(255,255,255,.05); }
+#uploader .pick-box svg{ opacity:.9; }
+#uploader .pick-box .hint{ display:flex; flex-direction:column; gap:2px; }
+#uploader .pick-box .muted{ opacity:.7; font-size:.9rem; }
+
+/* drag state */
+#uploader .pick-box.is-drag{ border-color:var(--primary-2); background:rgba(37,99,235,.08); }
+
+/* preview grid */
+#uploader .preview-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px; margin-top:18px;
+}
+#uploader .preview-grid .thumb{
+  width:100%; max-width:180px;
+  background:#0D0E10; border:1px solid var(--border);
+  border-radius:12px; padding:8px;
+  display:flex; flex-direction:column; gap:8px;
+  transition:transform .12s ease;
+  margin:0 auto;
+}
+#uploader .preview-grid .thumb:hover{ transform:scale(1.02); }
+#uploader .preview-grid img{
+  width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:8px;
+}
+#uploader .preview-grid small{ opacity:.7; font-size:.8rem; }
+
+/* actions / messages */
+#uploader .actions{ margin-top:16px; display:flex; gap:10px; justify-content:center; align-items:center; }
+#uploader .form-msg{ min-height:20px; color:var(--muted); }
+
+/* share box */
+#uploader .share{ margin-top:28px; background:rgba(255,255,255,.05); border-radius:12px; padding:16px; text-align:left; }
+#uploader .share-row{ display:flex; gap:10px; align-items:center; }
+#uploader .share-row input{
+  flex:1; background:#0D0E10; border:1px solid var(--border); color:#fff;
+  border-radius:10px; padding:10px 12px; outline:none;
+}
+#uploader .share-row input:focus{ border-color:var(--primary-2); box-shadow:0 0 0 6px var(--ring); }
+

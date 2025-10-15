@@ -127,26 +127,28 @@
       <div class="container">
         <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
-        <!-- Dropzona + failų pasirinkimas -->
-        <label class="card dropzone" id="dropzone">
-          <div class="dz-inner">
-            <p><strong>Tempk & MesK</strong> nuotraukas čia arba spausk pasirinkti.</p>
-            <p class="muted">Leidžiami tipai: JPG, PNG, WEBP. Max 10MB / failas.</p>
-          </div>
-          <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
-        </label>
+        <!-- Vienas „box’as“ su + ikona -->
+        <button class="uploader" id="uploader" type="button" aria-controls="fileInputDemo">
+          <span class="uploader__icon" aria-hidden="true">
+            <!-- pliuso piktograma -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="uploader__text">
+            Paspausk arba tempk failus
+            <small>JPG, PNG, WEBP • iki 5 vnt • 10MB / failas</small>
+          </span>
+        </button>
+        <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
 
-        <!-- Peržiūros grid -->
-        <div class="preview-grid" id="previewGrid"></div>
+        <div class="uploader__selected" id="selectedInfo"></div>
 
-        <!-- Veiksmai -->
-        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn" id="btnChoose">Pasirinkti failus</button>
+        <div style="margin-top:14px; display:flex; gap:10px; justify-content:center;">
           <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
           <small class="muted form-msg" id="uploadMsg"></small>
         </div>
 
-        <!-- Rezultatas: nuoroda ir failų sąrašas -->
         <div class="share" id="shareBox" style="display:none;">
           <p><strong>Nuoroda sukurta!</strong></p>
           <div class="share-row">
@@ -172,43 +174,43 @@
       </div>
     </section>
 
-    <section class="pricing" id="pricing">
-      <div class="container">
-        <h2>Kainodara</h2>
-        <div class="pricing__grid">
-          <div class="price card">
-            <h3>Starter</h3>
-            <p class="price__amount">€0</p>
-            <ul>
-              <li>100 nuotraukų / mėn.</li>
-              <li>Laikinos nuorodos</li>
-              <li>Bazinė analizė</li>
-            </ul>
-            <a href="#cta" class="btn btn--ghost">Pradėti</a>
+    <section class="demo" id="demo">
+      <div class="container" id="uploader">
+        <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
+
+        <!-- Vienas box'as su + -->
+        <label class="pick-box" id="pickBox" for="fileInputDemo" aria-label="Pasirinkti failus">
+          <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="hint">
+            <strong>Pridėti nuotraukas</strong>
+            <span class="muted">JPG, PNG, WEBP • iki 10MB • max 5 failai</span>
           </div>
-          <div class="price card price--focus">
-            <h3>Pro</h3>
-            <p class="price__amount">€9<span>/mėn.</span></p>
-            <ul>
-              <li>Neribotos nuotraukos</li>
-              <li>Brendingas ir domenas</li>
-              <li>Komanda ir teisės</li>
-            </ul>
-            <a href="#cta" class="btn">Rinktis Pro</a>
+          <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+        </label>
+
+        <!-- Peržiūros -->
+        <div class="preview-grid" id="previewGrid" style="display:none;"></div>
+
+        <!-- Veiksmai -->
+        <div class="actions">
+          <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
+          <small class="form-msg" id="uploadMsg"></small>
+        </div>
+
+        <!-- Rezultatas -->
+        <div class="share" id="shareBox" style="display:none;">
+          <p><strong>Nuoroda sukurta!</strong></p>
+          <div class="share-row">
+            <input id="shareUrl" type="text" readonly>
+            <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
           </div>
-          <div class="price card">
-            <h3>Business</h3>
-            <p class="price__amount">€29<span>/mėn.</span></p>
-            <ul>
-              <li>SSO, auditas</li>
-              <li>Integracijos</li>
-              <li>Prioritetinis palaikymas</li>
-            </ul>
-            <a href="#cta" class="btn btn--ghost">Išbandyti</a>
-          </div>
+          <ul id="shareFiles" style="margin-top:10px;"></ul>
         </div>
       </div>
     </section>
+
 
     <section class="faq" id="faq">
       <div class="container">

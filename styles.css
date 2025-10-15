@@ -113,12 +113,11 @@ summary{cursor:pointer;font-weight:600}
 .dropzone.is-dragover{border-color:var(--primary-2); background:rgba(37,99,235,.08);}
 
 /* Responsive */
-@media (max-width: 480px){
+@media (max-width: 900px){
   .hero__grid{grid-template-columns:1fr}
   .cta-alt__wrap{flex-direction:column;align-items:stretch}
   .grid-3,.pricing__grid,.steps{grid-template-columns:1fr}
   .nav-links{display:none;position:absolute;top:64px;right:16px;background:var(--card);border:1px solid var(--border);padding:10px;border-radius:12px}
   .nav-links.show{display:flex;flex-direction:column;gap:10px}
   .nav-toggle{display:inline-block}
-  .dropzone{ max-width:320px; } /* smaller square on mobile */
 }

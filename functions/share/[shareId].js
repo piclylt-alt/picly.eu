@@ -103,7 +103,7 @@ export async function onRequestGet({ params, env }) {
             <small>${size}</small>
           </div>
           <div class="actions" style="margin-top:8px">
-            <a class="btn btn--small" href="${dl}" download>Parsisiųsti</a>
+            <a class="btn btn--small" href="${dl}?download=1">Parsisiųsti</a>
           </div>
         </div>`;
     }).join("");

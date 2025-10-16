@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setMsg(data.error || `Klaida (${res.status})`);
         return;
       }
-      urlEl.value = data.shareUrl || '';
+      urlEl.value = (data.shareUrl || '').replace('/api/share/', '/share/');
       if(!urlEl.value){
         setMsg('Nepavyko gauti nuorodos.');
         return;

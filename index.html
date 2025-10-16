@@ -124,11 +124,12 @@
     </section>
 
     <section class="demo" id="demo">
-      <div class="upload-area">
+      <div class="container">
         <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
-        <!-- Dropzona + failų pasirinkimas -->
-          <label class="uploader" id="dropzone">
+        <div class="demo-wrap card">
+          <!-- Dropzona: didelis kvadratas su "+" (spaudžiamas ir drag&drop) -->
+          <label class="uploader" id="dropzone" aria-label="Įkelk nuotraukas (paspausk arba tempk)">
             <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
             <div class="uploader__center">
               <div class="uploader__title">Įkelk nuotraukas</div>
@@ -137,29 +138,30 @@
             </div>
           </label>
 
-        <!-- Peržiūros grid -->
-        <div class="upload-side">
-            <div class="upload-buttons">
-              <button class="btn" id="btnChoose">Pasirinkti failus</button>
-              <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
-              <small class="muted form-msg" id="uploadMsg"></small>
-            </div>
-
+          <!-- Miniatiūros (5 vienoje eilėje desktop) -->
+          <div class="preview-bar">
             <div class="preview-grid" id="previewGrid"></div>
+            <div class="preview-empty muted" id="previewEmpty">Dar nėra pasirinktų failų.</div>
           </div>
-        </div>
 
-        <!-- Rezultatas (paliekam po plotu per visą eilutę) -->
-        <div class="share" id="shareBox" style="display:none;">
-          <p><strong>Nuoroda sukurta!</strong></p>
-          <div class="share-row">
-            <input id="shareUrl" type="text" readonly>
-            <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
+          <!-- Veiksmai + žinutės -->
+          <div class="actions-row">
+            <button class="btn" id="btnUpload" type="button">Įkelti</button>
+            <small class="muted form-msg" id="uploadMsg" role="status" aria-live="polite"></small>
           </div>
-          <ul id="shareFiles" style="margin-top:10px;"></ul>
+
+          <!-- Rezultatas: viena švari nuoroda -->
+          <div class="share" id="shareBox" hidden>
+            <div class="share-row">
+              <input id="shareUrl" type="text" readonly aria-label="Dalijimosi nuoroda">
+              <button class="btn btn--small" id="btnCopy" type="button">Kopijuoti</button>
+            </div>
+            <small class="muted">Nuoroda paruošta dalinimuisi klientams ar komandai.</small>
+          </div>
         </div>
       </div>
     </section>
+
 
     <section class="cta-alt" id="cta">
       <div class="container cta-alt__wrap card">

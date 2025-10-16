@@ -95,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   }
 
-  drop.addEventListener('click', () => input.click());
   input.addEventListener('change', e => accept(e.target.files));
   ['dragenter','dragover'].forEach(k =>
     drop.addEventListener(k, e => { e.preventDefault(); drop.classList.add('is-dragover'); })

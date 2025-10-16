@@ -127,40 +127,37 @@
       <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
       <div class="upload-area">
-        <!-- Kairėje: įkėlimo kvadratas -->
-        <label class="uploader" id="dropzone">
-          <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
-          <div class="uploader__center">
-            <div class="uploader__title">Įkelk nuotraukas</div>
-            <div class="uploader__hint">Tempk ir mesk arba spausk</div>
-            <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
-          </div>
-        </label>
-
-        <!-- Dešinėje: peržiūros pusė -->
-        <div class="upload-side">
-          <div class="upload-buttons">
-            <button class="btn" id="btnChoose">Pasirinkti failus</button>
-            <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
-            <small class="muted form-msg" id="uploadMsg"></small>
-          </div>
-
-          <div class="preview-grid" id="previewGrid">
-            <!-- Dinamiškai įkeltos miniatiūros čia -->
-          </div>
-
-          <!-- Apačioje nuoroda po visais -->
-          <div class="share" id="shareBox" style="display:none;">
-            <p><strong>Nuoroda sukurta!</strong></p>
-            <div class="share-row">
-              <input id="shareUrl" type="text" readonly>
-              <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
+        <!-- KAIRĖ: + kvadratas + mygtukas žemiau -->
+        <div class="upload-left">
+          <label class="uploader" id="dropzone">
+            <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+            <div class="uploader__center">
+              <div class="uploader__title">Įkelk nuotraukas</div>
+              <div class="uploader__hint">Tempk ir mesk arba spausk</div>
+              <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
             </div>
-            <ul id="shareFiles" style="margin-top:10px;"></ul>
-          </div>
+          </label>
+
+          <!-- Įkelti mygtukas po kvadratu -->
+          <button class="btn btn--ghost upload-btn-below" id="btnUpload">Įkelti failus</button>
+          <small class="muted form-msg" id="uploadMsg"></small>
+        </div>
+
+        <!-- DEŠINĖ: miniatiūrų grid (5 vienoje eilėje) -->
+        <div class="upload-side">
+          <div class="preview-grid" id="previewGrid"></div>
+        </div>
+      </div>
+
+      <!-- NUORODA PO VISA ZONA (be failų pavadinimų) -->
+      <div class="share" id="shareBox" style="display:none;">
+        <div class="share-row">
+          <input id="shareUrl" type="text" readonly>
+          <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
         </div>
       </div>
     </section>
+
 
     <section class="pricing" id="pricing">
       <div class="container">

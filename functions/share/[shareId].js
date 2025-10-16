@@ -35,7 +35,7 @@ const HTML = (title, body) => `<!doctype html>
     <div class="container" style="display:flex;align-items:center;justify-content:space-between">
       <a href="/" class="logo" style="display:flex;gap:10px;align-items:center;text-decoration:none;color:inherit">
         <img src="/assets/logo.svg" alt="Picly" style="height:22px">
-        <span class="muted" style="font-size:14px">Share</span>
+        <span class="muted" style="font-size:14px">Picly.eu</span>
       </a>
       <nav><a class="btn btn--ghost" href="/">Home</a></nav>
     </div>

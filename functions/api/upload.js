@@ -1,84 +1,167 @@
-// Cloudflare Pages Function: /api/upload
-// Reikalavimai: R2 binding "MY_BUCKET" (Pages → Settings → Functions → R2 bindings)
+// === Picly DEMO + AUTH Upload ===
+// - Neprisijungęs: demo režimas (feikinė share nuoroda, be serverio)
+// - Prisijungęs: POST /api/upload -> realus /share/{id}
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  // Jei reikia: "Access-Control-Max-Age": "86400",
-};
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById('fileInputDemo');
+  const drop  = document.getElementById('dropzone');
+  const grid  = document.getElementById('previewGrid');
+  const empty = document.getElementById('previewEmpty');
+  const msg   = document.getElementById('uploadMsg');
+  const btnUp = document.getElementById('btnUpload');
+  const box   = document.getElementById('shareBox');
+  const urlEl = document.getElementById('shareUrl');
+  const btnCp = document.getElementById('btnCopy');
 
-const json = (obj, status = 200) =>
-  new Response(JSON.stringify(obj), { status, headers: { ...CORS, "Content-Type": "application/json" } });
+  // Jei šiame puslapyje nėra demo sekcijos — išeinam tyliai
+  if (!input || !drop || !grid || !empty || !msg || !btnUp || !box || !urlEl || !btnCp) return;
 
-export const onRequestOptions = () => new Response(null, { status: 204, headers: CORS });
+  // --- Config ---
+  const MAX = 5;
+  const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
+  let picked = [];
+  let isLoggedIn = false;
 
-// konfiga – gali persirašyti į env kintamuosius, jei norėsi
-const MAX_FILES = 5;        // max 5 failai
-const MAX_SIZE_MB = 10;     // max 10 MB vienam failui
-const ALLOWED = ["image/jpeg", "image/png", "image/webp"]; // pagal tavo frontą
+  // --- Helpers ---
+  const setMsg = (t) => { msg.textContent = t || ''; };
+  const clearShare = () => { box.hidden = true; urlEl.value = ''; };
 
-const sanitize = (name = "") => name.replace(/[^\w.\-]+/g, "_").slice(0, 160);
-
-export async function onRequestPost({ request, env }) {
-  try {
-    if (!env.MY_BUCKET) {
-      return json({ ok: false, error: "R2 nėra sukonfigūruotas (trūksta binding 'MY_BUCKET')." }, 500);
+  function render(){
+    grid.innerHTML = '';
+    if (!picked.length){
+      empty.style.display = 'block';
+      return;
     }
-
-    const ct = request.headers.get("content-type") || "";
-    if (!ct.includes("multipart/form-data")) {
-      return json({ ok: false, error: "Tikimasi multipart/form-data." }, 400);
-    }
-
-    const form = await request.formData();
-    const files = form.getAll("files").filter(Boolean);
-
-    if (!files.length) return json({ ok: false, error: "Pridėk bent 1 failą." }, 400);
-    if (files.length > MAX_FILES) return json({ ok: false, error: `Max ${MAX_FILES} failai.` }, 400);
-
-    // Validacija + įkėlimas
-    const shareId = `s_${Math.random().toString(36).slice(2, 10)}`;
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-    const saved = [];
-
-    for (const f of files) {
-      const sizeMb = (f.size || 0) / (1024 * 1024);
-      const type = f.type || "application/octet-stream";
-      if (!ALLOWED.includes(type)) return json({ ok: false, error: `Neleidžiamas tipas: ${type}` }, 400);
-      if (sizeMb > MAX_SIZE_MB) return json({ ok: false, error: `Failas per didelis (> ${MAX_SIZE_MB} MB).` }, 400);
-
-      const safe = sanitize(f.name || "file");
-      const key = `uploads/${today}/${shareId}/${safe}`;
-
-      // R2 įkėlimas
-      await env.MY_BUCKET.put(key, f.stream(), {
-        httpMetadata: { contentType: type },
-      });
-
-      saved.push({
-        key,
-        filename: safe,
-        size: f.size || 0,
-        type,
-      });
-    }
-
-    // Share JSON – tai skaito tavo /api/share/[shareId].js
-    const shareJson = {
-      id: shareId,
-      createdAt: new Date().toISOString(),
-      files: saved,
-    };
-
-    await env.MY_BUCKET.put(`shares/${shareId}.json`, JSON.stringify(shareJson), {
-      httpMetadata: { contentType: "application/json" },
+    empty.style.display = 'none';
+    picked.forEach(f => {
+      const card = document.createElement('div');
+      card.className = 'thumb';
+      const img = document.createElement('img');
+      const url = URL.createObjectURL(f);
+      img.src = url;
+      img.onload = () => URL.revokeObjectURL(url);
+      const cap = document.createElement('small');
+      cap.className = 'muted cap';
+      cap.textContent = `${Math.round((f.size||0)/1024)} KB`;
+      card.appendChild(img);
+      card.appendChild(cap);
+      grid.appendChild(card);
     });
-
-    const origin = new URL(request.url).origin;
-    const shareUrl = `${origin}/share/${shareId}`;
-    return json({ ok: true, shareUrl }, 200);
-  } catch (e) {
-    return json({ ok: false, error: "Serverio klaida", details: String(e).slice(0, 300) }, 500);
   }
-}
+
+  function accept(list){
+    const arr = Array.from(list || []);
+    if (!arr.length){
+      setMsg('Nepasirinkta jokių failų.');
+      return;
+    }
+    const next = [];
+    for (const f of arr){
+      const type = f.type || '';
+      if (!ALLOWED.includes(type)){
+        setMsg(`Neleidžiamas tipas: ${type || 'nežinomas'}`);
+        return;
+      }
+      next.push(f);
+      if (next.length >= MAX) break;
+    }
+    picked = next;
+    setMsg('');
+    clearShare();
+    render();
+  }
+
+  // --- Auth check (nusprendžiam DEMO ar REAL) ---
+  (async () => {
+    try {
+      const r = await fetch('/api/auth/me', { credentials:'include' });
+      const m = await r.json().catch(()=> ({}));
+      isLoggedIn = !!m.loggedIn;
+      if (!isLoggedIn) {
+        // gali (pasirinktinai) išjungti mygtuką, bet paliekam įjungtą — jis veiks demo režimu
+        // btnUp.disabled = false;
+      }
+    } catch {
+      isLoggedIn = false;
+    }
+  })();
+
+  // --- UI events ---
+  // Svarbu: jei dropzona yra <label for="fileInputDemo">, ant jos NEDĖTI input.click(),
+  // nes naršyklė pati atidaro dialogą -> dvigubas atidarymas.
+  if (drop.tagName !== 'LABEL') {
+    drop.addEventListener('click', () => input.click());
+  }
+  input.addEventListener('change', e => accept(e.target.files));
+
+  ['dragenter','dragover'].forEach(k =>
+    drop.addEventListener(k, e => { e.preventDefault(); drop.classList.add('is-dragover'); })
+  );
+  ['dragleave','drop'].forEach(k =>
+    drop.addEventListener(k, e => { e.preventDefault(); drop.classList.remove('is-dragover'); })
+  );
+  drop.addEventListener('drop', e => accept(e.dataTransfer.files));
+
+  // --- Upload action ---
+  btnUp.addEventListener('click', async () => {
+    if (!picked.length){
+      setMsg('Pirma pasirink failus.');
+      return;
+    }
+    setMsg('Ruošiama…');
+    btnUp.disabled = true;
+    clearShare();
+
+    // 1) DEMO režimas (neprisijungęs)
+    if (!isLoggedIn) {
+      const demoId = `demo-${Math.random().toString(36).slice(2, 10)}`;
+      urlEl.value = `${location.origin}/share/${demoId}`;
+      box.hidden = false;
+      setMsg('Demo režimas: nuoroda sugeneruota (be įkėlimo į serverį).');
+      btnUp.disabled = false;
+      return;
+    }
+
+    // 2) REAL režimas (prisijungęs)
+    setMsg('Įkeliama…');
+
+    const fd = new FormData();
+    picked.forEach(f => fd.append('files', f, f.name));
+
+    try {
+      // nepildom Content-Type — naršyklė pati nustatys boundary
+      const res = await fetch('/api/upload', { method:'POST', body: fd, credentials:'include' });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok){
+        setMsg(data.error || `Klaida (${res.status})`);
+        return;
+      }
+      // serveris jau turėtų grąžinti /share/{id}; jei dar grįžta /api/share — konvertuojam:
+      const pretty = (data.shareUrl || '').replace('/api/share/','/share/');
+      if (!pretty){
+        setMsg('Nepavyko gauti nuorodos.');
+        return;
+      }
+      urlEl.value = pretty;
+      box.hidden = false;
+      setMsg('Viskas! Gali dalintis nuoroda žemiau.');
+    } catch (err) {
+      console.error(err);
+      setMsg('Tinklo klaida.');
+    } finally {
+      btnUp.disabled = false;
+    }
+  });
+
+  // Copy to clipboard
+  btnCp.addEventListener('click', async () => {
+    try {
+      if (!urlEl.value) return;
+      await navigator.clipboard.writeText(urlEl.value);
+      setMsg('Nukopijuota!');
+    } catch {
+      setMsg('Nepavyko nukopijuoti.');
+    }
+  });
+});

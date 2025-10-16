@@ -124,54 +124,41 @@
     </section>
 
     <section class="demo" id="demo">
+      <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
+
       <div class="upload-area">
-        <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
+        <!-- Kairėje: įkėlimo kvadratas -->
+        <label class="uploader" id="dropzone">
+          <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+          <div class="uploader__center">
+            <div class="uploader__title">Įkelk nuotraukas</div>
+            <div class="uploader__hint">Tempk ir mesk arba spausk</div>
+            <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
+          </div>
+        </label>
 
-        <!-- Dropzona + failų pasirinkimas -->
-          <label class="uploader" id="dropzone">
-            <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
-            <div class="uploader__center">
-              <div class="uploader__title">Įkelk nuotraukas</div>
-              <div class="uploader__hint">Tempk ir mesk arba spausk</div>
-              <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
-            </div>
-          </label>
-
-        <!-- Peržiūros grid -->
+        <!-- Dešinėje: peržiūros pusė -->
         <div class="upload-side">
-            <div class="upload-buttons">
-              <button class="btn" id="btnChoose">Pasirinkti failus</button>
-              <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
-              <small class="muted form-msg" id="uploadMsg"></small>
+          <div class="upload-buttons">
+            <button class="btn" id="btnChoose">Pasirinkti failus</button>
+            <button class="btn btn--ghost" id="btnUpload">Įkelti failus</button>
+            <small class="muted form-msg" id="uploadMsg"></small>
+          </div>
+
+          <div class="preview-grid" id="previewGrid">
+            <!-- Dinamiškai įkeltos miniatiūros čia -->
+          </div>
+
+          <!-- Apačioje nuoroda po visais -->
+          <div class="share" id="shareBox" style="display:none;">
+            <p><strong>Nuoroda sukurta!</strong></p>
+            <div class="share-row">
+              <input id="shareUrl" type="text" readonly>
+              <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
             </div>
-
-            <div class="preview-grid" id="previewGrid"></div>
+            <ul id="shareFiles" style="margin-top:10px;"></ul>
           </div>
         </div>
-
-        <!-- Rezultatas (paliekam po plotu per visą eilutę) -->
-        <div class="share" id="shareBox" style="display:none;">
-          <p><strong>Nuoroda sukurta!</strong></p>
-          <div class="share-row">
-            <input id="shareUrl" type="text" readonly>
-            <button class="btn btn--small" id="btnCopy">Kopijuoti</button>
-          </div>
-          <ul id="shareFiles" style="margin-top:10px;"></ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="cta-alt" id="cta">
-      <div class="container cta-alt__wrap card">
-        <div>
-          <h2>Pradėk per 2 minutes</h2>
-          <p>Nemokamas planas mažoms komandoms. Išaugus — perjunk planą be vargo.</p>
-        </div>
-        <form class="cta-form cta-form--inline" id="betaForm">
-          <input type="email" name="email" placeholder="Darbo el. paštas" required>
-          <button type="submit" class="btn">Startuoti dabar</button>
-          <small class="muted" id="betaMsg"></small>
-        </form>
       </div>
     </section>
 

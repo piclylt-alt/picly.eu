@@ -49,108 +49,167 @@ img{max-width:100%;display:block}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .feature h3{margin:4px 0 6px}
 
-/* --- Uploader (vienas kvadratas) – bazinis stilius --- */
-.demo { text-align:center; }
-
-.uploader{
-  display:grid;
-  place-items:center;
-
-  /* square */
-  width:100%;
-  max-width:460px;      /* bazinis dydis (bus perrašytas upload-area) */
-  aspect-ratio:1 / 1;
-
-  margin:16px auto 0;
-  border:2px dashed rgba(255,255,255,.16);
-  border-radius:16px;
-  background:rgba(255,255,255,.03);
-  position:relative;
-  overflow:hidden;
-  cursor:pointer;
-
-  transition:border-color .2s, background .2s, transform .06s;
-}
-.uploader:hover{
-  border-color:var(--primary-2);
-  background:rgba(255,255,255,.05);
-}
-.uploader:active{ transform:translateY(1px); }
-
-/* “+” */
-.uploader::before{
-  content:"+";
-  position:absolute;
-  top:50%; left:50%;
-  transform:translate(-50%,-58%);
-  font-size:80px;
-  line-height:1;
-  opacity:.9;
-  pointer-events:none;
+.demo {
+  text-align: left;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* Vidinis turinys */
-.uploader__center{
-  position:absolute;
-  left:50%; bottom:14px;
-  transform:translateX(-50%);
-  width:88%;
-  text-align:center;
-  pointer-events:none;
-}
-.uploader__title{ font-weight:700; margin:0 0 4px; opacity:.95; }
-.uploader__hint{ font-size:14px; opacity:.9; }
-.uploader__types{ font-size:13px; }
-
-/* Drag-over */
-.uploader.is-dragover{
-  border-color:var(--primary-2);
-  background:rgba(37,99,235,.08);
-  box-shadow:0 0 0 6px var(--ring);
+.demo h2 {
+  text-align: left;
+  margin-bottom: 12px;
 }
 
-/* --- NAUJA: Upload area layout (kairė kvadratas, dešinė turinys) --- */
-.upload-area{
-  display:flex;
-  align-items:flex-start;
-  justify-content:flex-start;
-  gap:32px;
-  max-width:1000px;
-  margin:12px auto 0;
+/* pagrindinis konteineris */
+.upload-area {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
 }
 
-/* tik upload-area viduje padarom mažesnį kvadratą kairei */
-.upload-area .uploader{
-  max-width:300px;
-  margin:0;              /* jokių auto centravimų – sėda prie kairės */
+/* kairėje pusėje kvadratas */
+.uploader {
+  display: grid;
+  place-items: center;
+  width: 280px;
+  aspect-ratio: 1 / 1;
+  border: 2px dashed rgba(255,255,255,.15);
+  border-radius: 16px;
+  background: rgba(255,255,255,.03);
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  position: relative;
+  overflow: hidden;
 }
 
-/* dešinė pusė: mygtukai + preview */
-.upload-side{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
+.uploader:hover {
+  border-color: var(--primary-2);
+  background: rgba(255,255,255,.06);
 }
 
-/* mygtukai viršuje dešinėje */
-.upload-buttons{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  flex-wrap:wrap;
+.uploader::before {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-60%);
+  font-size: 70px;
+  opacity: 0.8;
+  pointer-events: none;
 }
 
-/* Preview grid – palieku tavo esamą, tik jis dabar dešinėje */
-.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:18px;justify-items: center;}
-.preview-grid .thumb{ width:100%; max-width:180px; background:#0D0E10; border:1px solid var(--border); border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:8px; transition:transform .12s ease;}
-.preview-grid .thumb:hover{ transform:scale(1.02); }
-.preview-grid img{border-radius:8px;aspect-ratio:1/1;object-fit:cover;width:100%}
+.uploader__center {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  width: 88%;
+  text-align: center;
+  pointer-events: none;
+}
 
-/* Share blokas – kaip ir buvo */
-.share{margin-top:16px}
-.share-row{display:flex;gap:8px}
-.share-row input{flex:1;background:#0D0E10;border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text)}
+.uploader__title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.uploader__hint {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.uploader__types {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* dešinė pusė */
+.upload-side {
+  flex: 1;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* mygtukai */
+.upload-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* miniatiūros tinklelis */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.preview-grid .thumb {
+  width: 100%;
+  background: #0D0E10;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .12s ease;
+}
+
+.preview-grid .thumb:hover { transform: scale(1.03); }
+
+.preview-grid img {
+  border-radius: 8px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* nuorodos blokas */
+.share {
+  margin-top: 20px;
+}
+
+.share-row {
+  display: flex;
+  gap: 8px;
+}
+
+.share-row input {
+  flex: 1;
+  background: #0D0E10;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+}
+
+/* mažiems ekranams – vertikalus stacking */
+@media (max-width: 768px) {
+  .upload-area {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .uploader {
+    width: 90%;
+    max-width: 340px;
+  }
+
+  .upload-side {
+    width: 100%;
+  }
+
+  .preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
 
 /* kitos sekcijos – be pokyčių */
 .cta-alt{padding:40px 0;border-bottom:1px solid var(--border)}

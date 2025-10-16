@@ -76,7 +76,7 @@ export async function onRequestPost({ request, env }) {
     });
 
     const origin = new URL(request.url).origin;
-    const shareUrl = `${origin}/api/share/${shareId}`;
+    const shareUrl = `${origin}/share/${shareId}`;
     return json({ ok: true, shareUrl }, 200);
   } catch (e) {
     return json({ ok: false, error: "Serverio klaida", details: String(e).slice(0, 300) }, 500);

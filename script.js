@@ -147,3 +147,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+// === Header Auth Mount ===
+document.addEventListener('DOMContentLoaded', async () => {
+  const mount = document.getElementById('authMount');
+  if (!mount) return;
+
+  try{
+    const r = await fetch('/api/auth/me', { credentials:'include' });
+    const m = await r.json().catch(()=>({}));
+    mount.innerHTML = ''; // clear
+
+    if (m && m.loggedIn) {
+      // Prisijungęs
+      const acc = document.createElement('a');
+      acc.href = '/account';
+      acc.textContent = 'Mano paskyra';
+      acc.className = 'btn btn--small';
+
+      const out = document.createElement('button');
+      out.type = 'button';
+      out.textContent = 'Atsijungti';
+      out.className = 'btn btn--small btn--ghost';
+      out.addEventListener('click', async ()=>{
+        await fetch('/api/auth/logout', { method:'POST', credentials:'include' });
+        location.reload();
+      });
+
+      mount.append(acc, out);
+    } else {
+      // Neprisijungęs
+      const login = document.createElement('a');
+      login.href = '/login.html';
+      login.textContent = 'Prisijungti';
+      login.className = 'btn btn--small btn--ghost';
+
+      const reg = document.createElement('a');
+      reg.href = '/register.html';
+      reg.textContent = 'Registruotis';
+      reg.className = 'btn btn--small';
+
+      mount.append(login, reg);
+    }
+  }catch(e){
+    // tyliai ignoruojam
+  }
+});

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="lt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Registracija • Picly</title>
+  <link rel="icon" href="/assets/favicon.png" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a class="logo" href="/"><img src="/assets/logo.svg" alt="Picly" /><span>Picly.eu</span></a>
+      <nav class="nav-links" style="gap:12px">
+        <a href="/">Pagrindinis</a>
+        <a href="/login.html" class="btn btn--small">Prisijungti</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;padding:32px 0">
+    <div class="card" style="padding:24px">
+      <h1 style="margin:0 0 6px">Sukurti paskyrą</h1>
+      <p class="muted" style="margin:0 0 18px">Registracija su el. paštu ir slaptažodžiu.</p>
+
+      <form id="formReg" class="cta-form" style="max-width:420px">
+        <input type="email" name="email" placeholder="El. paštas" autocomplete="email" required />
+        <input type="password" name="password" placeholder="Slaptažodis (≥ 6 simbolių)" autocomplete="new-password" minlength="6" required />
+        <input type="password" name="confirm" placeholder="Pakartok slaptažodį" autocomplete="new-password" minlength="6" required />
+        <button class="btn" type="submit">Registruotis</button>
+        <small id="msgReg" class="muted form-msg" aria-live="polite"></small>
+      </form>
+
+      <div style="margin-top:16px">
+        <span class="muted">Jau turi paskyrą?</span>
+        <a href="/login.html">Prisijungti</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('formReg');
+    const msg  = document.getElementById('msgReg');
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      msg.textContent = '';
+      const email = form.email.value.trim();
+      const password = form.password.value;
+      const confirm  = form.confirm.value;
+
+      if(password !== confirm){
+        msg.textContent = 'Slaptažodžiai nesutampa.';
+        return;
+      }
+      if(password.length < 6){
+        msg.textContent = 'Slaptažodis per trumpas (min. 6).';
+        return;
+      }
+      msg.textContent = 'Kuriame paskyrą...';
+
+      try{
+        const res = await fetch('/api/auth/register', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json().catch(()=>({}));
+
+        if(!res.ok || !data.ok){
+          msg.textContent = data.error || 'Nepavyko sukurti paskyros.';
+          return;
+        }
+        // Sėkmė — siūlom prisijungti
+        msg.textContent = 'Paskyra sukurta! Perkeliame į prisijungimą...';
+        setTimeout(()=> location.href = '/login.html', 800);
+      }catch(err){
+        msg.textContent = 'Tinklo klaida.';
+      }
+    });
+  </script>
+</body>
+</html>

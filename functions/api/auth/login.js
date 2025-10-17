@@ -1,5 +1,5 @@
 // functions/api/auth/login.js
-import { json, parseCookies, cookie, randomId, verifyPassword } from "../_lib/session.js";
+import { json, parseCookies, cookie, randomId, verifyPassword } from "../../_lib/session.js";
 
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "Content-Type" };
 export const onRequestOptions = () => new Response(null, { status: 204, headers: CORS });

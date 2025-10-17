@@ -1,4 +1,4 @@
-// functions/api/auth/register.js
+// functions/api/auth/register.js.
 import { json, validEmail, randomId, hashPassword } from "../../_lib/session.js";
 
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "Content-Type" };

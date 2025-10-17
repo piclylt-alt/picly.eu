@@ -61,7 +61,7 @@ export async function onRequestPost({ request, env }) {
         httpMetadata: { contentType: "application/json" }
       });
 
-      return json({ ok:true, shareUrl: `/share/${shareId}` }, { headers:CORS });
+      return json({ ok:true, shareUrl: `${origin}/share/${shareId}` }, { headers:CORS });
     }
 
     // --- PRISIJUNGĘS vartotojas ---

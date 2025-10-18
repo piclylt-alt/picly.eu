@@ -18,6 +18,7 @@ export async function onRequestPost({ request, env }) {
     const sid = cookies.picly_sess || null;
     const sess = sid ? await env.SESSIONS.get(`sess:${sid}`, "json") : null;
     const authed = !!(sess?.email && validEmail(sess.email));
+    const { origin } = new URL(request.url);
 
     const form  = await request.formData();
     const files = form.getAll("files").filter(f => f && typeof f === "object");
@@ -100,7 +101,7 @@ export async function onRequestPost({ request, env }) {
       arr.unshift(shareId);
       await env.USER_SHARES.put(idxKey, JSON.stringify(arr));
 
-      return json({ ok:true, shareUrl: `/share/${shareId}` }, { headers:CORS });
+      return json({ ok:true, shareUrl: `${origin}/share/${shareId}` }, { headers:CORS });
     }
 
     // tik įkėlimas į folderį (be share dabar)

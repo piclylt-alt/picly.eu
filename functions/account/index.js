@@ -20,7 +20,7 @@ export async function onRequestGet({ request, env }){
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
         <div>
           <div style="font-weight:700">${escapeHtml(f.name)}</div>
-          <div class="muted">${escapeHtml(f.createdAt)}</div>
+          <div class="muted">${formatDate(f.createdAt)}</div>
         </div>
         <a class="btn btn--small" href="/account/folder/${f.id}">Atidaryti</a>
       </div>
@@ -77,6 +77,23 @@ export async function onRequestGet({ request, env }){
     </script>
   </body></html>`;
   return new Response(html, { headers:{ "Content-Type":"text/html;charset=utf-8" }});
+}
+
+function formatDate(iso) {
+  try {
+    const d = new Date(iso);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const h = String(d.getHours()).padStart(2, '0');
+    return `${y}-${m}-${day} ${h}:00`;
+  } catch {
+    return iso || '';
+  }
+}
+
+function escapeHtml(s=""){ 
+  return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c]));
 }
 
 function escapeHtml(s=""){ return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }

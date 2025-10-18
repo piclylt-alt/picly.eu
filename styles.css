@@ -20,6 +20,7 @@ img{max-width:100%;display:block}
 .btn:active{transform:translateY(1px)}
 .btn--small{padding:8px 12px;font-size:14px}
 .btn--ghost{background:transparent;border:1px solid var(--border)}
+.grid-3{gap:16px;}
 
 .lead{font-size:18px;opacity:.95}
 .muted{color:var(--muted);font-size:14px}

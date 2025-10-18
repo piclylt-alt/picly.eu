@@ -1,81 +1,267 @@
+
 <!doctype html>
 <html lang="lt">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Picly — Upload → Link → Share</title>
-<meta name="description" content="Picly akimirksniu paverčia nuotraukas dalinimosi nuorodomis. Sukurta komandoms ir verslui.">
-<link rel="icon" href="/assets/favicon.png">
-<meta property="og:title" content="Picly — Upload → Link → Share">
-<meta property="og:description" content="Paprastas nuotraukų dalinimasis su klientais ir komanda.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="/assets/og-cover.png">
-<meta name="theme-color" content="#0A0A0B">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Picly — Upload → Link → Share</title>
+  <meta name="description" content="Picly akimirksniu paverčia nuotraukas dalinimosi nuorodomis. Sukurta komandoms ir verslui.">
+  <link rel="icon" href="/assets/favicon.png">
+  <meta property="og:title" content="Picly — Upload → Link → Share">
+  <meta property="og:description" content="Paprastas nuotraukų dalinimasis su klientais ir komanda.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/og-cover.png">
+  <meta name="theme-color" content="#0A0A0B">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<!-- Top notice / badge -->
-<div class="topline">
-<div class="container topline__inner">
-<span class="badge">Beta</span>
-<span class="topline__copy">14 dienų nemokamai · Kortelės nereikia · EU serveriai</span>
-<a href="#cta" class="topline__cta">Pradėti</a>
-</div>
-</div>
+  <!-- Top notice / badge -->
+  <div class="topline">
+    <div class="container topline__inner">
+      <span class="badge">Beta</span>
+      <span class="topline__copy">14 dienų nemokamai · Kortelės nereikia · EU serveriai</span>
+      <a href="#cta" class="topline__cta">Pradėti</a>
+    </div>
+  </div>
 
+  <header class="header">
+    <div class="container nav">
+      <a class="logo" href="#hero">
+        <img src="/assets/logo.svg" alt="Picly logotipas">
+        <span>Picly.eu</span>
+      </a>
+      <button class="nav-toggle" aria-label="Open menu" id="navToggle">☰</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#how">Kaip veikia</a>
+        <a href="#features">Funkcijos</a>
+        <a href="#pricing">Kainodara</a>
+        <a href="#faq">DUK</a>
+        <a href="#cta" class="btn btn--small">Pabandyti</a>
+        <span id="authMount" style="display:flex;gap:10px;align-items:center"></span>
+      </nav>
+    </div>
+  </header>
 
-<header class="header">
-<div class="container nav">
-<a class="logo" href="#hero">
-<img src="/assets/logo.svg" alt="Picly logotipas">
-<span>Picly.eu</span>
-</a>
-<button class="nav-toggle" aria-label="Open menu" id="navToggle">☰</button>
-<nav class="nav-links" id="navLinks">
-<a href="#how">Kaip veikia</a>
-<a href="#features">Funkcijos</a>
-<a href="#pricing">Kainodara</a>
-<a href="#faq">DUK</a>
-<a href="#cta" class="btn btn--small">Pabandyti</a>
-<span id="authMount" style="display:flex;gap:10px;align-items:center"></span>
-</nav>
-</div>
-</header>
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero__bg"></div>
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <h1>Upload → Link → Share</h1>
+          <p class="lead">
+            Įkelk nuotraukas, gauk švarią nuorodą ir pasidalink per <strong>sekundes</strong>. Be ZIP'ų, be chaoso, su brendingu ir teisių kontrole.
+          </p>
+          <ul class="checks">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Trumpa dalinimosi nuoroda</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Brendingas ir domenas</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> GDPR, EU serveriai</li>
+          </ul>
+          <form class="cta-form" id="earlyAccessForm">
+            <input type="email" name="email" placeholder="Tavo el. paštas" required>
+            <button type="submit" class="btn">Gauti ankstyvą prieigą</button>
+            <small class="muted" id="earlyAccessMsg"></small>
+            <small class="muted">Nemokama 14 dienų. Kortelės nereikia.</small>
+          </form>
+        </div>
+        <div class="hero__media card hero__media--glow">
+          <img src="/assets/hero-mock.png" alt="Picly aplikacijos peržiūra">
+        </div>
+      </div>
+    </section>
 
+    <!-- TRUST -->
+    <section class="trust">
+      <div class="container trust__row">
+        <p class="muted">Pasitiki komandos, dirbančios su vizualais kasdien</p>
+        <div class="trust__logos scroller" aria-label="Klientų logotipai">
+          <img src="/assets/logo-placeholder.svg" alt="Logo 1">
+          <img src="/assets/logo-placeholder.svg" alt="Logo 2">
+          <img src="/assets/logo-placeholder.svg" alt="Logo 3">
+          <img src="/assets/logo-placeholder.svg" alt="Logo 4">
+          <img src="/assets/logo-placeholder.svg" alt="Logo 5">
+        </div>
+      </div>
+    </section>
 
-<main>
-<!-- HERO -->
-<section class="hero" id="hero">
-<div class="hero__bg"></div>
-<div class="container hero__grid">
-<div class="hero__content">
-<h1>Upload → Link → Share</h1>
-<p class="lead">
-Įkelk nuotraukas, gauk švarią nuorodą ir pasidalink per <strong>sekundes</strong>. Be ZIP'ų, be chaoso, su brendingu ir teisių kontrole.
-</p>
-<ul class="checks">
-<li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Trumpa dalinimosi nuoroda</li>
-<li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Brendingas ir domenas</li>
-<li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> GDPR, EU serveriai</li>
-</ul>
-<form class="cta-form" id="earlyAccessForm">
-<input type="email" name="email" placeholder="Tavo el. paštas" required>
-<button type="submit" class="btn">Gauti ankstyvą prieigą</button>
-<small class="muted" id="earlyAccessMsg"></small>
-<small class="muted">Nemokama 14 dienų. Kortelės nereikia.</small>
-</form>
-</div>
-<div class="hero__media card hero__media--glow">
-<img src="/assets/hero-mock.png" alt="Picly aplikacijos peržiūra">
-</div>
-</div>
-</section>
+    <!-- HOW -->
+    <section class="how" id="how">
+      <div class="container">
+        <h2>Kaip veikia</h2>
+        <div class="steps">
+          <div class="step card">
+            <div class="step__num">1</div>
+            <h3>Įkelk</h3>
+            <p>Tempk ir mesk nuotraukas arba pasirink iš įrenginio. Optimizuojame dydį ir raišką.</p>
+          </div>
+          <div class="step card">
+            <div class="step__num">2</div>
+            <h3>Gauk nuorodą</h3>
+            <p>Švarios, trumpos nuorodos su gražia peržiūra — patogu klientams, saugu komandai.</p>
+          </div>
+          <div class="step card">
+            <div class="step__num">3</div>
+            <h3>Pasidalink</h3>
+            <p>Nuoroda, QR ar įterpimas svetainėje. Galiojimas ir slaptažodis — vienu spust.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- FEATURES -->
+    <section class="features" id="features">
+      <div class="container">
+        <h2>Funkcijos verslui</h2>
+        <div class="grid-3">
+          <div class="feature card"><h3>Dalijimosi taisyklės</h3><p>Nustatyk, kas gali matyti, atsisiųsti ar komentuoti. Laikinės nuorodos ir slaptažodis.</p></div>
+          <div class="feature card"><h3>Brendingas</h3><p>Tavo logotipas, spalvos ir domenas (pvz., <strong>photos.tavoimone.lt</strong>).</p></div>
+          <div class="feature card"><h3>Greitis ir kokybė</h3><p>WebP/AVIF, retina peržiūros ir greitas CDN.</p></div>
+          <div class="feature card"><h3>Integracijos</h3><p>Slack, e. paštas, nuorodos į Shopify / Notion / Trello / Google Drive.</p></div>
+          <div class="feature card"><h3>QR ir įterpimas</h3><p>Generuok QR kodus vietoje. Įterpk galerijas į svetaines.</p></div>
+          <div class="feature card"><h3>Privatumas</h3><p>GDPR atitiktis, prieigos žurnalai ir šifravimas.</p></div>
+        </div>
+      </div>
+    </section>
 
-<!-- TRUST -->
-<section class="trust">
-<div class="container trust__row">
+    <!-- DEMO -->
+    <section class="demo" id="demo">
+      <div class="container">
+        <div class="demo__head">
+          <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
+          <p class="muted">Tai demonstracinė versija — parodome, kaip veikia Upload → Link → Share.</p>
+        </div>
+
+        <div class="demo-wrap card">
+          <!-- Dropzona: didelis kvadratas su "+" (spaudžiamas ir drag&drop) -->
+          <label class="uploader" id="dropzone" aria-label="Įkelk nuotraukas (paspausk arba tempk)">
+            <input id="fileInputDemo" type="file" accept="image/*" multiple hidden>
+            <div class="uploader__center">
+              <div class="uploader__title">Įkelk nuotraukas</div>
+              <div class="uploader__hint">Tempk ir mesk arba spausk</div>
+              <div class="uploader__types muted">JPG, PNG, WEBP • iki 10MB / failas</div>
+            </div>
+          </label>
+
+          <!-- Miniatiūros (5 vienoje eilėje desktop) -->
+          <div class="preview-bar">
+            <div class="preview-grid" id="previewGrid"></div>
+            <div class="preview-empty muted" id="previewEmpty">Dar nėra pasirinktų failų.</div>
+          </div>
+
+          <!-- Veiksmai + žinutės -->
+          <div class="actions-row">
+            <button class="btn" id="btnUpload" type="button">Įkelti</button>
+            <small class="muted form-msg" id="uploadMsg" role="status" aria-live="polite"></small>
+          </div>
+
+          <!-- Rezultatas: viena švari nuoroda -->
+          <div class="share" id="shareBox" hidden>
+            <div class="share-row">
+              <input id="shareUrl" type="text" readonly aria-label="Dalijimosi nuoroda">
+              <button class="btn btn--small" id="btnCopy" type="button">Kopijuoti</button>
+            </div>
+            <small class="muted">Nuoroda paruošta dalinimuisi klientams ar komandai.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALT CTA -->
+    <section class="cta-alt" id="cta">
+      <div class="container cta-alt__wrap card">
+        <div>
+          <h2>Pradėk per 2 minutes</h2>
+          <p>Nemokamas planas mažoms komandoms. Išaugus — perjunk planą be vargo.</p>
+        </div>
+        <form class="cta-form cta-form--inline" id="betaForm">
+          <input type="email" name="email" placeholder="Darbo el. paštas" required>
+          <button type="submit" class="btn">Startuoti dabar</button>
+          <small class="muted" id="betaMsg"></small>
+        </form>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <h2>Kainodara</h2>
+        <div class="pricing__grid">
+          <div class="price card">
+            <h3>Starter</h3>
+            <p class="price__amount">€0</p>
+            <ul>
+              <li>100 nuotraukų / mėn.</li>
+              <li>Laikinos nuorodos</li>
+              <li>Bazinė analizė</li>
+            </ul>
+            <a href="#cta" class="btn btn--ghost">Pradėti</a>
+          </div>
+          <div class="price card price--focus">
+            <h3>Pro</h3>
+            <p class="price__amount">€9<span>/mėn.</span></p>
+            <ul>
+              <li>Neribotos nuotraukos</li>
+              <li>Brendingas ir domenas</li>
+              <li>Komanda ir teisės</li>
+            </ul>
+            <a href="#cta" class="btn">Rinktis Pro</a>
+          </div>
+          <div class="price card">
+            <h3>Business</h3>
+            <p class="price__amount">€29<span>/mėn.</span></p>
+            <ul>
+              <li>SSO, auditas</li>
+              <li>Integracijos</li>
+              <li>Prioritetinis palaikymas</li>
+            </ul>
+            <a href="#cta" class="btn btn--ghost">Išbandyti</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <h2>Dažniausiai užduodami klausimai</h2>
+        <details>
+          <summary>Ar galiu dalintis failų aplankais?</summary>
+          <p>Taip. Galima sukurti bendrinamą albumą su keliomis teisėmis: peržiūra, atsisiuntimas, komentarai.</p>
+        </details>
+        <details>
+          <summary>Kur laikomi duomenys?</summary>
+          <p>ES (GDPR). Galima rinktis regioną pagal poreikį.</p>
+        </details>
+        <details>
+          <summary>Ar yra API?</summary>
+          <p>Taip. REST ir JavaScript SDK. Pavyzdžiai pateikti dokumentacijoje.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <a class="logo" href="#hero">
+          <img src="/assets/logo.svg" alt="Picly logotipas">
+          <span>Picly.eu</span>
+        </a>
+        <p class="muted">© <span id="year"></span> Picly. Visos teisės saugomos.</p>
+      </div>
+      <nav class="footer__nav">
+        <a href="#features">Funkcijos</a>
+        <a href="#pricing">Kainodara</a>
+        <a href="#faq">DUK</a>
+        <a href="mailto:hello@picly.eu">Kontaktai</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
 </html>

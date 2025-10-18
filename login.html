@@ -11,8 +11,7 @@
   <header class="header">
     <div class="container nav">
       <a class="logo" href="/"><img src="/assets/logo.svg" alt="Picly" /><span>Picly.eu</span></a>
-      <button class="nav-toggle" aria-label="Open menu" id="navToggle">☰</button>
-      <nav class="nav-links" id="navLinks" style="gap:12px">
+      <nav class="nav-links" style="gap:12px">
         <a href="/">Pagrindinis</a>
         <a href="/register.html" class="btn btn--small">Sukurti paskyrą</a>
       </nav>
@@ -26,8 +25,8 @@
 
       <!-- Tabs -->
       <div style="display:flex;gap:8px;margin-bottom:16px">
-        <button id="tabPwd" class="btn btn--small" type="button">Slaptažodžiu</button>
-        <button id="tabCode" class="btn btn--small btn--ghost" type="button">Kodu el. paštu</button>
+        <button id="tabPwd" class="btn btn--small">Slaptažodžiu</button>
+        <button id="tabCode" class="btn btn--small btn--ghost">Kodu el. paštu</button>
       </div>
 
       <!-- Login by password -->
@@ -54,11 +53,6 @@
   </main>
 
   <script>
-    // Mobile nav toggle (reuse styles.js pattern if present)
-    const toggle = document.getElementById('navToggle');
-    const links  = document.getElementById('navLinks');
-    if (toggle && links){ toggle.addEventListener('click', ()=> links.classList.toggle('show')); }
-
     // Tab switching
     const tabPwd  = document.getElementById('tabPwd');
     const tabCode = document.getElementById('tabCode');
@@ -90,8 +84,11 @@
         });
         const data = await res.json().catch(()=>({}));
         if(!res.ok || !data.ok){ msgPwd.textContent = data.error || 'Neteisingi duomenys'; return; }
+        // Sėkmė -> į paskyrą
         location.href = '/account';
-      }catch(err){ msgPwd.textContent = 'Tinklo klaida.'; }
+      }catch(err){
+        msgPwd.textContent = 'Tinklo klaida.';
+      }
     });
 
     // Login by email code (send code)
@@ -109,7 +106,9 @@
         const data = await res.json().catch(()=>({}));
         if(!res.ok || !data.ok){ msgCode.textContent = data.error || 'Nepavyko išsiųsti kodo'; return; }
         msgCode.textContent = 'Išsiųsta! Patikrink el. paštą — paspausk „Prisijungti“ nuorodą arba suvesk kodą.';
-      }catch(err){ msgCode.textContent = 'Tinklo klaida.'; }
+      }catch(err){
+        msgCode.textContent = 'Tinklo klaida.';
+      }
     });
   </script>
 </body>

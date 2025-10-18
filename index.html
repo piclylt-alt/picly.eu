@@ -1,14 +1,13 @@
-
 <!doctype html>
 <html lang="lt">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Picly — Upload → Link → Share</title>
-  <meta name="description" content="Picly akimirksniu paverčia nuotraukas dalinimosi nuorodomis. Sukurta komandoms ir verslui.">
+  <title>Picly — Paprastas nuotraukų dalinimasis verslui</title>
+  <meta name="description" content="Picly padeda verslams akimirksniu dalintis nuotraukomis su klientais ir komanda. Paprasta. Greita. Saugu.">
   <link rel="icon" href="/assets/favicon.png">
-  <meta property="og:title" content="Picly — Upload → Link → Share">
-  <meta property="og:description" content="Paprastas nuotraukų dalinimasis su klientais ir komanda.">
+  <meta property="og:title" content="Picly — Paprastas nuotraukų dalinimasis verslui">
+  <meta property="og:description" content="Paprastas būdas dalintis nuotraukomis su klientais ir komanda.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="/assets/og-cover.png">
   <meta name="theme-color" content="#0A0A0B">
@@ -17,16 +16,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <!-- Top notice / badge -->
-  <div class="topline">
-    <div class="container topline__inner">
-      <span class="badge">Beta</span>
-      <span class="topline__copy">14 dienų nemokamai · Kortelės nereikia · EU serveriai</span>
-      <a href="#cta" class="topline__cta">Pradėti</a>
-    </div>
-  </div>
 
+<body>
   <header class="header">
     <div class="container nav">
       <a class="logo" href="#hero">
@@ -39,27 +30,22 @@
         <a href="#features">Funkcijos</a>
         <a href="#pricing">Kainodara</a>
         <a href="#faq">DUK</a>
-        <a href="#cta" class="btn btn--small">Pabandyti</a>
+        <a href="#cta" class="btn btn--small">Pabandyti nemokamai</a>
+
+        <!-- Auth mount (JS užpildys prisijungimo mygtukus) -->
         <span id="authMount" style="display:flex;gap:10px;align-items:center"></span>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- HERO -->
     <section class="hero" id="hero">
-      <div class="hero__bg"></div>
       <div class="container hero__grid">
         <div class="hero__content">
-          <h1>Upload → Link → Share</h1>
+          <h1>Paprastas būdas dalintis nuotraukomis su klientais ir komanda.</h1>
           <p class="lead">
-            Įkelk nuotraukas, gauk švarią nuorodą ir pasidalink per <strong>sekundes</strong>. Be ZIP'ų, be chaoso, su brendingu ir teisių kontrole.
+            Picly leidžia akimirksniu <strong>įkelti</strong>, <strong>generuoti nuorodą</strong> ir <strong>pasidalinti</strong> nuotraukomis — be chaoso, ZIP'ų ar ilgų el. laiškų.
           </p>
-          <ul class="checks">
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Trumpa dalinimosi nuoroda</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Brendingas ir domenas</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> GDPR, EU serveriai</li>
-          </ul>
           <form class="cta-form" id="earlyAccessForm">
             <input type="email" name="email" placeholder="Tavo el. paštas" required>
             <button type="submit" class="btn">Gauti ankstyvą prieigą</button>
@@ -67,27 +53,24 @@
             <small class="muted">Nemokama 14 dienų. Kortelės nereikia.</small>
           </form>
         </div>
-        <div class="hero__media card hero__media--glow">
+        <div class="hero__media card">
           <img src="/assets/hero-mock.png" alt="Picly aplikacijos peržiūra">
         </div>
       </div>
     </section>
 
-    <!-- TRUST -->
     <section class="trust">
       <div class="container trust__row">
         <p class="muted">Pasitiki komandos, dirbančios su vizualais kasdien</p>
-        <div class="trust__logos scroller" aria-label="Klientų logotipai">
+        <div class="trust__logos">
           <img src="/assets/logo-placeholder.svg" alt="Logo 1">
           <img src="/assets/logo-placeholder.svg" alt="Logo 2">
           <img src="/assets/logo-placeholder.svg" alt="Logo 3">
           <img src="/assets/logo-placeholder.svg" alt="Logo 4">
-          <img src="/assets/logo-placeholder.svg" alt="Logo 5">
         </div>
       </div>
     </section>
 
-    <!-- HOW -->
     <section class="how" id="how">
       <div class="container">
         <h2>Kaip veikia</h2>
@@ -95,44 +78,57 @@
           <div class="step card">
             <div class="step__num">1</div>
             <h3>Įkelk</h3>
-            <p>Tempk ir mesk nuotraukas arba pasirink iš įrenginio. Optimizuojame dydį ir raišką.</p>
+            <p>Tempk ir mesk nuotraukas arba pasirink iš įrenginio. Mes automatiškai optimizuojame dydį ir raišką.</p>
           </div>
           <div class="step card">
             <div class="step__num">2</div>
             <h3>Gauk nuorodą</h3>
-            <p>Švarios, trumpos nuorodos su gražia peržiūra — patogu klientams, saugu komandai.</p>
+            <p>Generuojame švarias, trumpas nuorodas su peržiūra: patogu klientams, saugu tavo komandai.</p>
           </div>
           <div class="step card">
             <div class="step__num">3</div>
             <h3>Pasidalink</h3>
-            <p>Nuoroda, QR ar įterpimas svetainėje. Galiojimas ir slaptažodis — vienu spust.</p>
+            <p>Siųsk kaip nuorodą, QR kodą ar įterpk į svetainę. Galiojimo laikas ir apsauga slaptažodžiu — vienu spust.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FEATURES -->
     <section class="features" id="features">
       <div class="container">
         <h2>Funkcijos verslui</h2>
         <div class="grid-3">
-          <div class="feature card"><h3>Dalijimosi taisyklės</h3><p>Nustatyk, kas gali matyti, atsisiųsti ar komentuoti. Laikinės nuorodos ir slaptažodis.</p></div>
-          <div class="feature card"><h3>Brendingas</h3><p>Tavo logotipas, spalvos ir domenas (pvz., <strong>photos.tavoimone.lt</strong>).</p></div>
-          <div class="feature card"><h3>Greitis ir kokybė</h3><p>WebP/AVIF, retina peržiūros ir greitas CDN.</p></div>
-          <div class="feature card"><h3>Integracijos</h3><p>Slack, e. paštas, nuorodos į Shopify / Notion / Trello / Google Drive.</p></div>
-          <div class="feature card"><h3>QR ir įterpimas</h3><p>Generuok QR kodus vietoje. Įterpk galerijas į svetaines.</p></div>
-          <div class="feature card"><h3>Privatumas</h3><p>GDPR atitiktis, prieigos žurnalai ir šifravimas.</p></div>
+          <div class="feature card">
+            <h3>Dalijimosi taisyklės</h3>
+            <p>Nustatyk, kas gali matyti, atsisiųsti ar komentuoti. Laikinės nuorodos ir slaptažodis.</p>
+          </div>
+          <div class="feature card">
+            <h3>Brendingas</h3>
+            <p>Tavo logotipas, spalvos ir domenas (pvz., <strong>photos.tavoimone.lt</strong>).</p>
+          </div>
+          <div class="feature card">
+            <h3>Greitis ir kokybė</h3>
+            <p>Automatinis suspaudimas, WebP/AVIF, retina peržiūros ir greitas CDN.</p>
+          </div>
+          <div class="feature card">
+            <h3>Integracijos</h3>
+            <p>Slack, e. paštas, nuorodos į Shopify / Notion / Trello / Google Drive.</p>
+          </div>
+          <div class="feature card">
+            <h3>QR ir įterpimas</h3>
+            <p>Generuok QR kodus vietoje. Įterpk galerijas į svetaines per iframe ar JS.</p>
+          </div>
+          <div class="feature card">
+            <h3>Privatumas</h3>
+            <p>EU serveriai, GDPR atitiktis, prieigos žurnalai ir šifravimas.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- DEMO -->
     <section class="demo" id="demo">
       <div class="container">
-        <div class="demo__head">
-          <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
-          <p class="muted">Tai demonstracinė versija — parodome, kaip veikia Upload → Link → Share.</p>
-        </div>
+        <h2>Išbandyk: įkelk iki 5 nuotraukų</h2>
 
         <div class="demo-wrap card">
           <!-- Dropzona: didelis kvadratas su "+" (spaudžiamas ir drag&drop) -->
@@ -169,7 +165,7 @@
       </div>
     </section>
 
-    <!-- ALT CTA -->
+
     <section class="cta-alt" id="cta">
       <div class="container cta-alt__wrap card">
         <div>
@@ -184,7 +180,6 @@
       </div>
     </section>
 
-    <!-- PRICING -->
     <section class="pricing" id="pricing">
       <div class="container">
         <h2>Kainodara</h2>
@@ -223,7 +218,6 @@
       </div>
     </section>
 
-    <!-- FAQ -->
     <section class="faq" id="faq">
       <div class="container">
         <h2>Dažniausiai užduodami klausimai</h2>
@@ -243,7 +237,6 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer__grid">
       <div>
@@ -264,4 +257,5 @@
 
   <script src="/script.js" defer></script>
 </body>
+
 </html>

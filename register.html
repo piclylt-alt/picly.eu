@@ -11,8 +11,7 @@
   <header class="header">
     <div class="container nav">
       <a class="logo" href="/"><img src="/assets/logo.svg" alt="Picly" /><span>Picly.eu</span></a>
-      <button class="nav-toggle" aria-label="Open menu" id="navToggle">☰</button>
-      <nav class="nav-links" id="navLinks" style="gap:12px">
+      <nav class="nav-links" style="gap:12px">
         <a href="/">Pagrindinis</a>
         <a href="/login.html" class="btn btn--small">Prisijungti</a>
       </nav>
@@ -40,11 +39,6 @@
   </main>
 
   <script>
-    // Mobile nav toggle
-    const toggle = document.getElementById('navToggle');
-    const links  = document.getElementById('navLinks');
-    if (toggle && links){ toggle.addEventListener('click', ()=> links.classList.toggle('show')); }
-
     const form = document.getElementById('formReg');
     const msg  = document.getElementById('msgReg');
 
@@ -55,8 +49,14 @@
       const password = form.password.value;
       const confirm  = form.confirm.value;
 
-      if(password !== confirm){ msg.textContent = 'Slaptažodžiai nesutampa.'; return; }
-      if(password.length < 6){ msg.textContent = 'Slaptažodis per trumpas (min. 6).'; return; }
+      if(password !== confirm){
+        msg.textContent = 'Slaptažodžiai nesutampa.';
+        return;
+      }
+      if(password.length < 6){
+        msg.textContent = 'Slaptažodis per trumpas (min. 6).';
+        return;
+      }
       msg.textContent = 'Kuriame paskyrą...';
 
       try{
@@ -66,10 +66,17 @@
           body: JSON.stringify({ email, password })
         });
         const data = await res.json().catch(()=>({}));
-        if(!res.ok || !data.ok){ msg.textContent = data.error || 'Nepavyko sukurti paskyros.'; return; }
+
+        if(!res.ok || !data.ok){
+          msg.textContent = data.error || 'Nepavyko sukurti paskyros.';
+          return;
+        }
+        // Sėkmė — siūlom prisijungti
         msg.textContent = 'Paskyra sukurta! Perkeliame į prisijungimą...';
         setTimeout(()=> location.href = '/login.html', 800);
-      }catch(err){ msg.textContent = 'Tinklo klaida.'; }
+      }catch(err){
+        msg.textContent = 'Tinklo klaida.';
+      }
     });
   </script>
 </body>

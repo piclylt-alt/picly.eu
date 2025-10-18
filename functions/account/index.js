@@ -11,7 +11,7 @@ export async function onRequestGet({ request, env }){
 
   const userId = sess.email.toLowerCase().replace(/[^\w.\-]+/g,'_');
 
-  // folders
+  // folders iš KV
   const fraw = await env.USER_FOLDERS.get(`user:${userId}:folders`);
   const folders = fraw ? JSON.parse(fraw) : [];
 
@@ -33,7 +33,12 @@ export async function onRequestGet({ request, env }){
   </head><body>
     <header class="header"><div class="container" style="display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;gap:10px;align-items:center"><img src="/assets/logo.svg" style="height:22px"><b>Picly.eu</b></div>
-      <nav><a href="/" class="btn btn--ghost">Pradžia</a> <form style="display:inline" method="post" action="/api/auth/logout"><button class="btn btn--ghost">Atsijungti</button></form></nav>
+      <nav>
+        <a href="/" class="btn btn--ghost">Pradžia</a>
+        <form style="display:inline" method="post" action="/api/auth/logout">
+          <button class="btn btn--ghost">Atsijungti</button>
+        </form>
+      </nav>
     </div></header>
 
     <main class="container" style="padding:16px 0">
@@ -73,27 +78,27 @@ export async function onRequestGet({ request, env }){
           location.href = '/account/folder/' + j.folder.id;
         }catch(e){ msg.textContent='Tinklo klaida'; }
       }
-      function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
+      // Pastaba: escapeHtml nereikalingas kliente, nes HTML jau sugeneruotas serveryje
     </script>
   </body></html>`;
   return new Response(html, { headers:{ "Content-Type":"text/html;charset=utf-8" }});
 }
 
-function formatDate(iso) {
-  try {
-    const d = new Date(iso);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const h = String(d.getHours()).padStart(2, '0');
-    return `${y}-${m}-${day} ${h}:00`;
-  } catch {
-    return iso || '';
-  }
-}
-
-function escapeHtml(s=""){ 
+// --- Vienintelis (server-side) helperių rinkinys žemiau ---
+function escapeHtml(s=""){
   return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c]));
 }
 
-function escapeHtml(s=""){ return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
+function formatDate(iso){
+  try{
+    const d = new Date(iso);
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    const h = String(d.getHours()).padStart(2,'0');
+    // Jei nori minučių, pakeisk į: `${y}-${m}-${day} ${h}:${String(d.getMinutes()).padStart(2,'0')}`
+    return `${y}-${m}-${day} ${h}:00`;
+  }catch{
+    return iso || '';
+  }
+}

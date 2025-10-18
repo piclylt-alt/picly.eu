@@ -54,9 +54,28 @@ export async function onRequestGet({ params, request, env }){
   const html = `<!doctype html><html lang="lt"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="/styles.css"><title>${esc(folder.name)} • Picly</title>
+
+    <!-- CRITICAL CSS: tik galerijai (kad veiktų net jei kešas senas) -->
     <style>
-      /* paliekam tik file input styling, grid – CSS faile */
+      /* įkėlimo input'as – paliekam kaip buvo */
       input[type=file]{background:#0D0E10;border:1px solid var(--border);border-radius:12px;padding:8px;color:var(--text)}
+      /* grid – 5 stulpeliai (3 ≤1000px, 2 ≤680px) */
+      .grid-files{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+      @media (max-width:1000px){.grid-files{grid-template-columns:repeat(3,1fr)}}
+      @media (max-width:680px){.grid-files{grid-template-columns:repeat(2,1fr)}}
+      /* kortelė + thumbnail */
+      .file-card{position:relative;background:#0D0E10;border:1px solid var(--border);border-radius:12px;padding:6px;cursor:pointer;user-select:none}
+      .file-card img{display:block;width:100%;height:150px;object-fit:cover;border-radius:8px}
+      .file-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:8px}
+      /* pažymėjimas */
+      .file-card input[type="checkbox"]{display:none}
+      .file-card.is-selected{outline:2px solid var(--primary-2);outline-offset:2px}
+      .file-card.is-selected img{box-shadow:0 0 0 4px var(--ring)}
+      /* overlay – rodyt tik hover metu */
+      .file-actions{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:2}
+      .file-card:hover .file-actions{opacity:1;pointer-events:auto}
+      .file-actions__inner{display:flex;gap:8px;padding:6px;background:rgba(0,0,0,.45);border:1px solid var(--border);border-radius:12px;backdrop-filter:saturate(1.2) blur(6px)}
+      .file-actions .btn{padding:8px 10px;border-radius:10px}
     </style>
   </head><body>
     <header class="header"><div class="container" style="display:flex;align-items:center;justify-content:space-between">
@@ -130,6 +149,7 @@ export async function onRequestGet({ params, request, env }){
         card.addEventListener('click', (e) => {
           if (e.target.closest('.btn-view, .btn-del')) return;
           const cb = card.querySelector('input[type="checkbox"]');
+          if(!cb) return;
           const next = !cb.checked;
           cb.checked = next;
           card.classList.toggle('is-selected', next);
@@ -145,6 +165,7 @@ export async function onRequestGet({ params, request, env }){
           e.stopPropagation();
           const card = e.currentTarget.closest('.file-card');
           const img = card.querySelector('img');
+          if(!img) return;
           vImg.src = img.src;
           vImg.alt = card.dataset.filename || '';
           if (typeof viewer.showModal === 'function') viewer.showModal();
@@ -159,7 +180,8 @@ export async function onRequestGet({ params, request, env }){
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
           const card = e.currentTarget.closest('.file-card');
-          const key = card.dataset.key;
+          const key = card?.dataset?.key;
+          if (!key) return alert('Nerastas failo raktas.');
           if (!confirm('Ištrinti šį failą?')) return;
           try{
             const r = await fetch(DELETE_ENDPOINT, {
@@ -180,7 +202,7 @@ export async function onRequestGet({ params, request, env }){
         });
       });
 
-      // Bendrinimas (paliekame tavo esamą srautą /api/share/from-folder)
+      // Bendrinimas
       const sf = document.getElementById('shareForm');
       sf?.addEventListener('submit', async (e)=>{
         e.preventDefault();

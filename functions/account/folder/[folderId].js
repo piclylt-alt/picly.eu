@@ -1,3 +1,4 @@
+// functions/account/folder/[folderId].js
 import { parseCookies } from "../../_lib/session.js";
 
 const esc = s => (s||"").replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m]));
@@ -17,7 +18,7 @@ export async function onRequestGet({ params, request, env }){
   const folder = folders.find(f => f.id === folderId);
   if(!folder) return new Response("Folder not found", { status:404 });
 
-  // išlistinam R2 objektus
+  // R2 objektai
   const prefix = `u/${uid}/folders/${folderId}/`;
   const listed = await env.MY_BUCKET.list({ prefix, limit: 200 });
   const files = (listed.objects||[]).map(o => {
@@ -25,24 +26,36 @@ export async function onRequestGet({ params, request, env }){
     return { key:o.key, filename, size:o.size||0 };
   });
 
-  const cards = files.map(f => `
-    <label class="file-card" style="display:block;cursor:pointer">
-      <input type="checkbox" name="keys" value="${esc(f.key)}" style="accent-color:#3B82F6; margin-bottom:6px">
-      <img src="/api/download/${encodeURIComponent(f.key)}" alt="${esc(f.filename)}" style="width:100%;height:150px;object-fit:cover;border-radius:8px">
-      <div class="file-meta" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
-        <small title="${esc(f.filename)}">${esc(f.filename.length>22? f.filename.slice(0,19)+'…': f.filename)}</small>
-        <small>${fmtSize(f.size)}</small>
+  // Kortelės su paslėptu checkbox + hover meniu
+  const cards = files.map(f => {
+    const key = esc(f.key);
+    const filename = esc(f.filename);
+    const imgSrc = `/api/download/${encodeURIComponent(f.key)}`;
+    const size = fmtSize(f.size);
+
+    return `
+      <div class="file-card" data-key="${key}" data-filename="${filename}">
+        <input type="checkbox" name="keys" value="${key}">
+        <img src="${imgSrc}" alt="${filename}">
+        <div class="file-actions">
+          <div class="file-actions__inner">
+            <button type="button" class="btn btn--ghost btn-view">Peržiūrėti</button>
+            <button type="button" class="btn btn--ghost btn-del">Ištrinti</button>
+          </div>
+        </div>
+        <div class="file-meta">
+          <small title="${filename}">${filename.length>22? filename.slice(0,19)+'…': filename}</small>
+          <small>${size}</small>
+        </div>
       </div>
-    </label>
-  `).join("") || `<div class="empty">Šiame aplanke dar nėra failų.</div>`;
+    `;
+  }).join("") || `<div class="empty">Šiame aplanke dar nėra failų.</div>`;
 
   const html = `<!doctype html><html lang="lt"><head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="/styles.css"><title>${esc(folder.name)} • Picly</title>
     <style>
-      .grid-files{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-      @media (max-width:1000px){ .grid-files{grid-template-columns:repeat(3,1fr)} }
-      @media (max-width:680px){ .grid-files{grid-template-columns:repeat(2,1fr)} }
+      /* paliekam tik file input styling, grid – CSS faile */
       input[type=file]{background:#0D0E10;border:1px solid var(--border);border-radius:12px;padding:8px;color:var(--text)}
     </style>
   </head><body>
@@ -77,15 +90,32 @@ export async function onRequestGet({ params, request, env }){
       </section>
     </main>
 
-    <script>
-      function fmt(b){const u=['B','KB','MB','GB'];let i=0,n=b;while(n>=1024&&i<u.length-1){n/=1024;i++;}return (i===0?n:n.toFixed(1))+' '+u[i];}
-      function toggleAll(v){ document.querySelectorAll('input[name=keys]').forEach(el=>el.checked=v); }
+    <!-- Viewer dialog -->
+    <dialog id="viewer" style="background:#121214;color:#EDEFF2;border:1px solid #1E1F23;border-radius:12px;padding:0;max-width:90vw">
+      <div style="position:relative">
+        <button type="button" id="vClose" class="btn btn--ghost" style="position:absolute;top:8px;right:8px;z-index:2">Uždaryti</button>
+        <img id="vImg" src="" alt="" style="display:block;max-width:90vw;max-height:80vh;border-radius:12px">
+      </div>
+    </dialog>
 
+    <script>
+      // helperai
+      function fmt(b){const u=['B','KB','MB','GB'];let i=0,n=b;while(n>=1024&&i<u.length-1){n/=1024;i++;}return (i===0?n:n.toFixed(1))+' '+u[i];}
+      function toggleAll(v){
+        document.querySelectorAll('input[name=keys]').forEach(el=>{
+          el.checked = v;
+          const card = el.closest('.file-card');
+          if(card) card.classList.toggle('is-selected', v);
+        });
+      }
+      window.toggleAll = toggleAll;
+
+      // Įkėlimas
       const up = document.getElementById('upForm');
       up?.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const msg = document.getElementById('upMsg');
-        msg.textContent='Įkeliama...';
+        msg.textContent='Įkeliama.';
         try{
           const fd = new FormData(up);
           const r  = await fetch('/api/upload', { method:'POST', body: fd, credentials:'include' });
@@ -95,13 +125,69 @@ export async function onRequestGet({ params, request, env }){
         }catch{ msg.textContent='Tinklo klaida'; }
       });
 
+      // Pažymėjimas spustelint ant kortelės (bet ne ant mygtukų)
+      document.querySelectorAll('.file-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-view, .btn-del')) return;
+          const cb = card.querySelector('input[type="checkbox"]');
+          const next = !cb.checked;
+          cb.checked = next;
+          card.classList.toggle('is-selected', next);
+        });
+      });
+
+      // Viewer
+      const viewer = document.getElementById('viewer');
+      const vImg = document.getElementById('vImg');
+      const vClose = document.getElementById('vClose');
+      document.querySelectorAll('.file-card .btn-view').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = e.currentTarget.closest('.file-card');
+          const img = card.querySelector('img');
+          vImg.src = img.src;
+          vImg.alt = card.dataset.filename || '';
+          if (typeof viewer.showModal === 'function') viewer.showModal();
+        });
+      });
+      vClose?.addEventListener('click', () => viewer.close());
+      viewer?.addEventListener('click', (e) => { if (e.target === viewer) viewer.close(); });
+
+      // Ištrynimas
+      const DELETE_ENDPOINT = '/api/files/delete';
+      document.querySelectorAll('.file-card .btn-del').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const card = e.currentTarget.closest('.file-card');
+          const key = card.dataset.key;
+          if (!confirm('Ištrinti šį failą?')) return;
+          try{
+            const r = await fetch(DELETE_ENDPOINT, {
+              method:'POST',
+              headers:{ 'Content-Type':'application/json' },
+              credentials:'include',
+              body: JSON.stringify({ key })
+            });
+            const j = await r.json().catch(()=>({}));
+            if(!r.ok || j?.ok === false){
+              alert(j?.error || 'Nepavyko ištrinti');
+              return;
+            }
+            card.remove();
+          }catch(err){
+            alert('Tinklo klaida');
+          }
+        });
+      });
+
+      // Bendrinimas (paliekame tavo esamą srautą /api/share/from-folder)
       const sf = document.getElementById('shareForm');
       sf?.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const msg = document.getElementById('shareMsg');
         const keys = Array.from(document.querySelectorAll('input[name=keys]:checked')).map(el=>el.value);
         if(!keys.length){ msg.textContent='Nepasirinkta nė vieno failo'; return; }
-        msg.textContent='Kuriama nuoroda...';
+        msg.textContent='Kuriama nuoroda.';
         try{
           const r = await fetch('/api/share/from-folder', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ files: keys }) });
           const j = await r.json();

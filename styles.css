@@ -83,7 +83,7 @@ img{ max-width:100%; display:block; }
 .cta-form--inline input{ flex:1; }
 
 .trust{ padding:16px 0; border-bottom:1px solid var(--border); }
-.trust__row{ display:grid; align-items:center; gap:24px; justify-content:space-between; }
+.trust__row{ display:flex; align-items:center; gap:24px; justify-content:space-between; }
 .trust__logos{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -249,7 +249,7 @@ summary{ cursor:pointer; font-weight:600; }
   .nav-toggle{ display:inline-block; }
 
   /* Trusted logos */
-  .trust__row{ flex-direction:column; align-items:flex-start; gap:12px; }
+  .trust__row{gap:12px; }
   .trust__logos{ grid-template-columns:repeat(2,1fr); gap:16px; }
 
   /* Uploader */

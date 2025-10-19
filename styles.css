@@ -85,7 +85,7 @@ img{ max-width:100%; display:block; }
 .trust{ padding:16px 0; border-bottom:1px solid var(--border); }
 .trust__row{ display:flex; align-items:center; gap:24px; justify-content:space-between; }
 .trust__logos{
-  display:flex;
+  display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:20px;
   opacity:.7;

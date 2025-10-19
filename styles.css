@@ -84,7 +84,14 @@ img{ max-width:100%; display:block; }
 
 .trust{ padding:16px 0; border-bottom:1px solid var(--border); }
 .trust__row{ display:flex; align-items:center; gap:24px; justify-content:space-between; }
-.trust__logos{ display:flex; gap:20px; opacity:.7; }
+.trust__logos{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  opacity:.7;
+  align-items:center;
+  justify-items:center;
+}
 .trust__logos img{ width:88px; height:auto; }
 
 .how{ padding:56px 0 24px; border-bottom:1px solid var(--border); }
@@ -177,9 +184,6 @@ summary{ cursor:pointer; font-weight:600; }
   grid-template-columns:repeat(5,1fr);
   gap:12px;
 }
-@media (max-width:1000px){ .grid-files{ grid-template-columns:repeat(3,1fr); } }
-@media (max-width:680px){  .grid-files{ grid-template-columns:repeat(2,1fr); } }
-
 .file-card{
   position:relative;
   background:#0D0E10; border:1px solid var(--border);
@@ -188,22 +192,17 @@ summary{ cursor:pointer; font-weight:600; }
 }
 .file-card img{
   width:100%;
-  height:150px;             /* mažos miniatiūros */
+  height:150px;
   object-fit:cover;
   border-radius:8px;
 }
-
 .file-meta{
   display:flex; align-items:center; justify-content:space-between; margin-top:6px;
   gap:8px;
 }
-
-/* pažymėjimas */
 .file-card input[type="checkbox"]{ display:none; }
 .file-card.is-selected{ outline:2px solid var(--primary-2); outline-offset:2px; }
 .file-card.is-selected img{ box-shadow:0 0 0 4px var(--ring); }
-
-/* overlay meniu – matomas tik hover metu */
 .file-actions{
   position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
@@ -219,34 +218,51 @@ summary{ cursor:pointer; font-weight:600; }
 .file-actions .btn{ padding:8px 10px; border-radius:10px; }
 
 /* =========================
-   Responsive
+   Responsive (single breakpoint ≤768px)
 ========================= */
-@media (max-width: 900px){
-  .hero__grid{ grid-template-columns:1fr; }
-  .cta-alt__wrap{ flex-direction:column; align-items:stretch; }
+@media (max-width: 768px){
 
+  /* General layout */
+  .container{ padding:0 16px; }
+
+  /* Hero section */
+  .hero__grid{ grid-template-columns:1fr; gap:20px; }
+  .hero h1{ font-size:32px; }
+
+  /* Form inline stack */
+  .cta-form--inline{ flex-direction:column; gap:10px; }
+
+  /* One-column grids */
   .grid-3,
   .pricing__grid,
   .steps{ grid-template-columns:1fr; }
 
-  /* nav dropdown */
+  /* Navigation (dropdown) */
   .nav-links{
-    display:none; position:absolute; top:64px; right:16px; background:var(--card);
-    border:1px solid var(--border); padding:10px; border-radius:12px;
+    display:none;
+    position:absolute; top:64px; right:16px;
+    background:var(--card); border:1px solid var(--border);
+    padding:10px; border-radius:12px;
     flex-direction:column; gap:10px;
   }
   .nav-links.show{ display:flex; }
   .nav-toggle{ display:inline-block; }
 
-  /* uploader layout */
+  /* Trusted logos */
+  .trust__row{ flex-direction:column; align-items:flex-start; gap:12px; }
+  .trust__logos{ grid-template-columns:repeat(2,1fr); gap:16px; }
+
+  /* Uploader */
   .upload-area{ display:flex; flex-direction:column; align-items:center; }
   .upload-side{ width:100%; }
   .upload-area .uploader{ max-width:280px; }
 
-  /* previews */
-  .preview-grid{ grid-template-columns:repeat(3,1fr); }
-}
-
-@media (max-width: 520px){
+  /* Preview grid */
   .preview-grid{ grid-template-columns:repeat(2,1fr); }
+
+  /* File gallery */
+  .grid-files{ grid-template-columns:repeat(2,1fr); }
+
+  /* Footer */
+  .footer__grid{ flex-direction:column; gap:16px; }
 }
